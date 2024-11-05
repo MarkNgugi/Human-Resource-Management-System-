@@ -1,0 +1,232 @@
+{%extends 'hrms/admin/base.html'%}
+{%block content%}
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f6f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #ff6b6b, #f06595);
+            color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .step-card {
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            background-color: #fff;
+        }
+
+        .step-card:hover {
+            transform: scale(1.02);
+        }
+
+        .step-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: white;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .status.pending { background-color: #ff9800; }
+        .status.completed { background-color: #4caf50; }
+
+        .step-body {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-top: 2px solid #007bff;
+        }
+
+        .step-body p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn-custom {
+            font-size: 0.9rem;
+            padding: 8px 18px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-custom.archive-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-custom.archive-btn:hover {
+            background-color: #218838;
+            box-shadow: 0 3px 6px rgba(0, 128, 0, 0.3);
+        }
+
+        .btn-custom.revoke-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-custom.revoke-btn:hover {
+            background-color: #c82333;
+            box-shadow: 0 3px 6px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            box-shadow: 0 3px 6px rgba(0, 123, 255, 0.3);
+        }
+
+        .step-header i {
+            margin-right: 10px;
+        }
+
+        /* Animation */
+        .step-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="page-header">
+        <h2>Employee Offboarding Workflow</h2>
+        <p>Process the exit steps for departing employees efficiently.</p>
+    </div>
+
+    <!-- Step 1: Final Evaluation -->
+    <div class="step-card">
+        <div class="step-header">
+            <i class="fas fa-clipboard-check"></i> Step 1: Final Evaluation
+            <span class="status pending">Pending</span>
+        </div>
+        <div class="step-body">
+            <p><strong>Goal:</strong> Conduct the final performance evaluation with the employee.</p>
+            <p><strong>Tasks:</strong> Complete feedback forms, conduct exit interview, and review project handovers.</p>
+            <div class="action-buttons">
+                <button class="btn btn-primary btn-custom">Start Evaluation</button>
+                <button class="btn btn-secondary btn-custom">View Checklist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Offboarding Tasks -->
+    <div class="step-card">
+        <div class="step-header">
+            <i class="fas fa-tasks"></i> Step 2: Offboarding Tasks
+            <span class="status pending">Pending</span>
+        </div>
+        <div class="step-body">
+            <p><strong>Goal:</strong> Complete offboarding tasks across departments.</p>
+            <p><strong>Tasks:</strong> Return equipment, disable system access, complete HR paperwork, and settle final pay.</p>
+            <div class="action-buttons">
+                <button class="btn btn-primary btn-custom">View Tasks</button>
+                <button class="btn btn-secondary btn-custom">Assign Responsibilities</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Documentation Archiving -->
+    <div class="step-card">
+        <div class="step-header">
+            <i class="fas fa-archive"></i> Step 3: Documentation & Archiving
+            <span class="status completed">Completed</span>
+        </div>
+        <div class="step-body">
+            <p><strong>Goal:</strong> Archive employee’s files and final paperwork.</p>
+            <p><strong>Tasks:</strong> Save final performance records, update employee database, and store legal documents.</p>
+            <div class="action-buttons">
+                <button class="btn btn-success btn-custom archive-btn">Archive Profile</button>
+                <button class="btn btn-secondary btn-custom">Review Documentation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Revoke Access Permissions -->
+    <div class="step-card">
+        <div class="step-header">
+            <i class="fas fa-user-lock"></i> Step 4: Revoke Access Permissions
+            <span class="status pending">Pending</span>
+        </div>
+        <div class="step-body">
+            <p><strong>Goal:</strong> Remove all access permissions from the company's systems.</p>
+            <p><strong>Tasks:</strong> Disable account access, revoke security badges, and update access control lists.</p>
+            <div class="action-buttons">
+                <button class="btn btn-danger btn-custom revoke-btn">Revoke Access</button>
+                <button class="btn btn-secondary btn-custom">Audit Access Logs</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap and jQuery JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{%endblock%}

@@ -1,0 +1,230 @@
+{%extends 'hrms/admin/base.html'%}
+
+{%block content%}
+
+    <style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f3f7, #d9e3ea);
+            color: #333;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* Form Elements */
+        .form-group label {
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+        .tooltip-icon {
+            font-size: 0.9rem;
+            color: #888;
+            cursor: pointer;
+            margin-left: 6px;
+        }
+
+        /* Button Styling */
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer Link */
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        h5.text-primary {
+            margin-top: 20px;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin-top: 30px;
+            }
+            .header {
+                font-size: 1.8rem;
+            }
+            h5.text-primary {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-group label {
+                font-size: 0.9rem;
+            }
+            .btn-submit {
+                font-size: 0.9rem;
+            }
+            .header {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Add New Employee</div>
+        <form>            
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address <i class="fas fa-info-circle tooltip-icon" title="Used for login and communication"></i></label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" placeholder="Enter phone number" required>
+            </div>
+        
+            <hr>
+            <h5 class="text-primary">Job Details</h5>
+
+            <div class="form-group">
+                <label for="position">Position</label>
+                <input type="text" class="form-control" id="position" placeholder="Enter job position" required>
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <select class="form-control" id="department" required>
+                    <option value="" disabled selected>Select department</option>
+                    <option>IT</option>
+                    <option>Human Resources</option>
+                    <option>Finance</option>
+                    <option>Operations</option>
+                    <option>Sales</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" class="form-control" id="startDate" required>
+            </div>
+            
+            <hr>
+            <h5 class="text-primary">Account and Security</h5>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Create a username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password <i class="fas fa-info-circle tooltip-icon" title="Minimum 8 characters, at least 1 uppercase letter"></i></label>
+                <input type="password" class="form-control" id="password" placeholder="Create a password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" required>
+            </div>
+    
+            <hr>
+            <h5 class="text-primary">Role and Permissions</h5>
+
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select class="form-control" id="role" required>
+                    <option value="" disabled selected>Select role</option>
+                    <option>Admin</option>
+                    <option>HR-Manager</option>
+                    <option>Employee</option>                    
+                </select>
+            </div>
+
+            <!-- <div class="form-group">
+                <label>Permissions</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="viewReports">
+                    <label class="form-check-label" for="viewReports">View Reports</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="editRecords">
+                    <label class="form-check-label" for="editRecords">Edit Records</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="manageUsers">
+                    <label class="form-check-label" for="manageUsers">Manage Users</label>
+                </div>
+            </div> -->
+        
+            <button type="submit" class="btn-submit">Add Employee</button>
+        </form>
+
+        <div class="form-footer">
+            <p>Want to go back? <a href="#">Return to Dashboard</a></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{%endblock%}

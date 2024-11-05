@@ -1,0 +1,283 @@
+{%extends 'hrms/admin/base.html'%}
+{%block content%}
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #f0f4f8;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            width: 100%;
+            border-radius: 50px;
+        }
+
+        .search-bar button {
+            background-color: #007bff;
+            border: none;
+            color: #ffffff;
+            padding: 8px 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .upload-section h5 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .upload-section label {
+            font-weight: 500;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .upload-section input, .upload-section select {
+            border-radius: 12px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s ease;
+        }
+
+        .upload-section input:focus, .upload-section select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .upload-btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s;
+            border: none;
+        }
+
+        .upload-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Document List */
+        .document-list {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .document-list h5 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Document Card */
+        .document-list .card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+
+        .document-list .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02);
+        }
+
+        .document-list .card-header {
+            background-color: #f1f3f5;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #444;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .document-list .card-header .document-type {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Document Type Colors */
+        .document-type-contract {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .document-type-certificate {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .document-type-review {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .document-list .card-body {
+            padding: 20px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        /* Document Actions */
+        .document-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .document-actions .btn {
+            font-size: 0.85rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .btn-download {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-download:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-bar {
+                flex-direction: column;
+            }
+            .search-bar button {
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">    
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" class="form-control" placeholder="Search documents...">
+        <button class="btn">Search</button>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <h5>Upload Document</h5>
+        <form id="uploadForm">
+            <div class="form-group mb-3">
+                <label for="docType">Document Type</label>
+                <select class="form-control" id="docType" required>
+                    <option value="">Select Type</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Certificate">Certificate</option>
+                    <option value="Performance Review">Performance Review</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label for="employeeName">Employee Name</label>
+                <input type="text" class="form-control" id="employeeName" placeholder="Enter employee name" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="fileUpload">Select File</label>
+                <input type="file" class="form-control" id="fileUpload" required>
+            </div>
+            <button type="submit" class="upload-btn">Upload Document</button>
+        </form>
+    </div>
+
+    <!-- Document List -->
+    <div class="document-list">
+        <h5>Document Library</h5>
+        
+        <!-- Example Document Entry -->
+        <div class="card">
+            <div class="card-header">
+                <span>Contract - John Doe</span>
+                <span class="document-type document-type-contract">Contract</span>
+                <span class="float-right">Uploaded on: 2023-10-12</span>
+            </div>
+            <div class="card-body">
+                <p><strong>Document Type:</strong> Contract</p>
+                <p><strong>Employee Name:</strong> John Doe</p>
+                <div class="document-actions">
+                    <button class="btn btn-download"><i class="fas fa-download"></i> Download</button>
+                    <button class="btn btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap and jQuery JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{%endblock%}
