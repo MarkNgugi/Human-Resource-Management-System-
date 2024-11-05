@@ -1,0 +1,236 @@
+{% extends 'hrms/admin/base.html' %}
+
+{% block content %}
+
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 950px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 35px 45px;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .container:hover {
+        transform: scale(1.02);
+    }
+
+    /* Header Styling */
+    .header {
+        text-align: center;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #007bff;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #007bff;
+    }
+
+    /* Leave Request Form Section */
+    .form-section {
+        margin-bottom: 35px;
+        padding: 25px;
+        background: #f8f9fb;
+        border-radius: 8px;
+    }
+
+    .form-label {
+        font-size: 1.15rem;
+        color: #555;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+        letter-spacing: 0.5px;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #ffffff;
+        margin-bottom: 20px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+        outline: none;
+    }
+
+    /* Approve Button Styling */
+    .approve-btn {
+        background-color: #28a745;
+        color: #ffffff;
+        padding: 14px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+        text-transform: uppercase;
+    }
+
+    .approve-btn:hover {
+        background-color: #218838;
+    }
+
+    /* Leave Balance Section Styling */
+    .leave-balance-section {
+        margin-top: 40px;
+    }
+
+    .leave-balance-section h3 {
+        font-size: 1.3rem;
+        color: #444;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Table Styling */
+    .balance-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .balance-table th,
+    .balance-table td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid #eeeeee;
+        color: #333;
+        transition: background 0.3s ease;
+    }
+
+    .balance-table th {
+        background-color: #f1f4f8;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .balance-table tr:hover {
+        background-color: #f7faff;
+    }
+
+    /* Decline Button */
+    .decline-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 14px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        margin-top: 25px;
+        text-transform: uppercase;
+    }
+
+    .decline-btn:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="container">
+    <div class="header">Leave Approval Workflow</div>
+
+    <!-- Leave Request Form -->
+    <div class="form-section">
+        <h3 class="form-label">Leave Request Details</h3>
+
+        <label class="form-label" for="employee-name">Employee Name</label>
+        <select id="employee-name" class="form-select">
+            <option value="">Select Employee</option>
+            <option value="john">John Doe</option>
+            <option value="jane">Jane Smith</option>
+            <option value="mike">Mike Johnson</option>
+        </select>
+
+        <label class="form-label" for="leave-type">Leave Type</label>
+        <select id="leave-type" class="form-select">
+            <option value="sick">Sick Leave</option>
+            <option value="vacation">Vacation</option>
+            <option value="maternity">Maternity Leave</option>
+            <option value="paternity">Paternity Leave</option>
+        </select>
+
+        <label class="form-label" for="date-range">Leave Date Range</label>
+        <input type="date" id="start-date" class="form-input" placeholder="Start Date">
+        <input type="date" id="end-date" class="form-input" placeholder="End Date">
+
+        <button class="approve-btn" onclick="approveLeave()">Approve Leave</button>
+        <button class="decline-btn" onclick="declineLeave()">Decline Leave</button>
+    </div>
+
+    <!-- Leave Balance Section -->
+    <div class="leave-balance-section">
+        <h3>Employee Leave Balance</h3>
+
+        <table class="balance-table">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Sick Leave</th>
+                    <th>Vacation Leave</th>
+                    <th>Maternity Leave</th>
+                    <th>Paternity Leave</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>5 days</td>
+                    <td>10 days</td>
+                    <td>30 days</td>
+                    <td>7 days</td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>3 days</td>
+                    <td>8 days</td>
+                    <td>30 days</td>
+                    <td>7 days</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Mock function for approving leave
+    function approveLeave() {
+        alert("Leave approved successfully!");
+    }
+
+    // Mock function for declining leave
+    function declineLeave() {
+        alert("Leave declined.");
+    }
+</script>
+
+{% endblock %}

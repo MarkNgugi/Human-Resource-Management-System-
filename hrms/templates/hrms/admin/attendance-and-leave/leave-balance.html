@@ -1,0 +1,221 @@
+{% extends 'hrms/admin/base.html' %}
+
+{% block content %}
+
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #eef1f7;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+    }
+
+    .leave-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    /* Card Styling */
+    .leave-card {
+        flex: 1 1 calc(33.33% - 40px);
+        max-width: 300px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .leave-card:hover {
+        transform: scale(1.05);
+    }
+
+    .employee-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .employee-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+        border: 2px solid #3498db;
+    }
+
+    .employee-name {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .leave-type {
+        font-size: 1.2rem;
+        color: #555;
+        margin-top: 20px;
+        font-weight: 600;
+    }
+
+    .leave-details {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .leave-label {
+        font-size: 0.95rem;
+        color: #666;
+        font-weight: bold;
+    }
+
+    .leave-value {
+        font-size: 1.1rem;
+        color: #3498db;
+        font-weight: 700;
+    }
+
+    /* Button */
+    .update-btn {
+        background-color: #3498db;
+        color: #fff;
+        padding: 12px;
+        width: 100%;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 15px;
+        text-transform: uppercase;
+    }
+
+    .update-btn:hover {
+        background-color: #2980b9;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .leave-card {
+            flex: 1 1 calc(100% - 40px);
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="header">Leave Balances Overview</div>
+
+    <!-- Leave Cards Section -->
+    <div class="leave-cards">
+        <!-- Example Leave Card for Each Employee -->
+        <div class="leave-card">
+            <div class="employee-info">
+                <img src="https://via.placeholder.com/50" alt="Employee Avatar" class="employee-avatar">
+                <div class="employee-name">John Doe</div>
+            </div>
+
+            <!-- Sick Leave -->
+            <div class="leave-type">Sick Leave</div>
+            <div class="leave-details">
+                <div class="leave-label">Accrued:</div>
+                <div class="leave-value">12 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Taken:</div>
+                <div class="leave-value">5 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Remaining:</div>
+                <div class="leave-value">7 days</div>
+            </div>
+
+            <!-- Vacation Leave -->
+            <div class="leave-type">Vacation Leave</div>
+            <div class="leave-details">
+                <div class="leave-label">Accrued:</div>
+                <div class="leave-value">15 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Taken:</div>
+                <div class="leave-value">8 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Remaining:</div>
+                <div class="leave-value">7 days</div>
+            </div>
+
+            <button class="update-btn" onclick="updateLeaveBalance()">Update Balance</button>
+        </div>
+
+        <!-- Additional cards for other employees can be duplicated similarly -->
+        <div class="leave-card">
+            <div class="employee-info">
+                <img src="https://via.placeholder.com/50" alt="Employee Avatar" class="employee-avatar">
+                <div class="employee-name">Jane Smith</div>
+            </div>
+
+            <!-- Sick Leave -->
+            <div class="leave-type">Sick Leave</div>
+            <div class="leave-details">
+                <div class="leave-label">Accrued:</div>
+                <div class="leave-value">10 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Taken:</div>
+                <div class="leave-value">3 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Remaining:</div>
+                <div class="leave-value">7 days</div>
+            </div>
+
+            <!-- Vacation Leave -->
+            <div class="leave-type">Vacation Leave</div>
+            <div class="leave-details">
+                <div class="leave-label">Accrued:</div>
+                <div class="leave-value">20 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Taken:</div>
+                <div class="leave-value">12 days</div>
+            </div>
+            <div class="leave-details">
+                <div class="leave-label">Remaining:</div>
+                <div class="leave-value">8 days</div>
+            </div>
+
+            <button class="update-btn" onclick="updateLeaveBalance()">Update Balance</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateLeaveBalance() {
+        alert("Leave balances updated!");
+    }
+</script>
+
+{% endblock %}

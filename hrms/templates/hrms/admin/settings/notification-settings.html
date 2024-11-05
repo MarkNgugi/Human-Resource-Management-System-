@@ -1,0 +1,254 @@
+{% extends 'hrms/admin/base.html' %}
+
+{% block content %}
+
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f7f9fc;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+
+    .section {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: #2980b9;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .notification-setting-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #f9fafc;
+        border: 1px solid #e0e5ec;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .notification-setting-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .notification-setting-title {
+        font-size: 1.1rem;
+        color: #34495e;
+    }
+
+    .notification-description {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+
+    .notification-toggle {
+        display: flex;
+        align-items: center;
+    }
+
+    .notification-toggle input {
+        width: 50px;
+        height: 24px;
+        border-radius: 50px;
+        background-color: #ddd;
+        transition: background-color 0.3s ease;
+        position: relative;
+        cursor: pointer;
+        appearance: none;
+    }
+
+    .notification-toggle input:checked {
+        background-color: #3498db;
+    }
+
+    .notification-toggle input:before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: white;
+        transition: all 0.3s ease;
+    }
+
+    .notification-toggle input:checked:before {
+        left: 26px;
+    }
+
+    .notification-methods {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .notification-methods label {
+        font-size: 1rem;
+        color: #34495e;
+        font-weight: 500;
+    }
+
+    .notification-methods input {
+        cursor: pointer;
+    }
+
+    .save-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        background-color: #3498db;
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+        border: none;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .save-btn:hover {
+        background-color: #2980b9;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            width: 95%;
+        }
+
+        .header {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="header">Notifications Settings</div>
+
+    <!-- Email Notifications Section -->
+    <div class="section">
+        <div class="section-title">Email Notifications</div>
+
+        <div class="notification-setting-card">
+            <div>
+                <div class="notification-setting-title">New Application Received</div>
+                <div class="notification-description">Notify via email when a new application is received.</div>
+            </div>
+            <div class="notification-toggle">
+                <input type="checkbox" id="email-application" name="email-application">
+            </div>
+        </div>
+
+        <div class="notification-setting-card">
+            <div>
+                <div class="notification-setting-title">Leave Requests</div>
+                <div class="notification-description">Notify via email when a leave request is made or approved.</div>
+            </div>
+            <div class="notification-toggle">
+                <input type="checkbox" id="email-leave-requests" name="email-leave-requests">
+            </div>
+        </div>
+    </div>
+
+    <!-- SMS Notifications Section -->
+    <div class="section">
+        <div class="section-title">SMS Notifications</div>
+
+        <div class="notification-setting-card">
+            <div>
+                <div class="notification-setting-title">Leave Requests</div>
+                <div class="notification-description">Notify via SMS when a leave request is made or approved.</div>
+            </div>
+            <div class="notification-toggle">
+                <input type="checkbox" id="sms-leave-requests" name="sms-leave-requests">
+            </div>
+        </div>
+
+        <div class="notification-setting-card">
+            <div>
+                <div class="notification-setting-title">Onboarding Tasks</div>
+                <div class="notification-description">Notify via SMS when new onboarding tasks are assigned.</div>
+            </div>
+            <div class="notification-toggle">
+                <input type="checkbox" id="sms-onboarding" name="sms-onboarding">
+            </div>
+        </div>
+    </div>
+
+    <!-- In-App Notifications Section -->
+    <div class="section">
+        <div class="section-title">In-App Notifications</div>
+
+        <div class="notification-setting-card">
+            <div>
+                <div class="notification-setting-title">Task Completion</div>
+                <div class="notification-description">Notify within the app when tasks are completed.</div>
+            </div>
+            <div class="notification-toggle">
+                <input type="checkbox" id="in-app-task-completion" name="in-app-task-completion">
+            </div>
+        </div>
+
+        <div class="notification-setting-card">
+            <div>
+                <div class="notification-setting-title">New Message</div>
+                <div class="notification-description">Notify within the app when a new message is received.</div>
+            </div>
+            <div class="notification-toggle">
+                <input type="checkbox" id="in-app-new-message" name="in-app-new-message">
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Method Preferences -->
+    <div class="section">
+        <div class="section-title">Preferred Notification Method</div>
+        <div class="notification-methods">
+            <label for="email">Email</label>
+            <input type="radio" id="email" name="notification-method" value="email" checked>
+            <label for="sms">SMS</label>
+            <input type="radio" id="sms" name="notification-method" value="sms">
+            <label for="in-app">In-App</label>
+            <input type="radio" id="in-app" name="notification-method" value="in-app">
+        </div>
+    </div>
+
+    <!-- Save Settings Button -->
+    <button class="save-btn" type="button" onclick="saveNotificationSettings()">Save Settings</button>
+</div>
+
+<script>
+    // JavaScript functionality for saving settings (if needed)
+    function saveNotificationSettings() {
+        alert("Notification settings saved successfully!");
+    }
+</script>
+
+{% endblock %}

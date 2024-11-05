@@ -64,21 +64,50 @@ def onboarding_workflow(request):
 # ============================ATTENDANCE AND LEAVE START============================
 
 def time_tracking(request):
-    pass
+    context={}
+    return render(request,'hrms/admin/attendance-and-leave/timetracking.html',context)
+
+def attendance_reports_generation(request):
+    context={}
+    return render(request,'hrms/admin/attendance-and-leave/report-generation.html',context)
+
+def leave_approval(request):
+    context={}
+    return render(request,'hrms/admin/attendance-and-leave/leave-approval.html',context)    
+
+def leave_balance(request):
+    context={}
+    return render(request,'hrms/admin/attendance-and-leave/leave-balance.html',context)    
+
 
 # ============================ATTENDANCE AND LEAVE END==============================
 
 # ============================REPORTS START=========================================
 
 def report_builder(request):
-    pass
+    context={}
+    return render(request,'hrms/admin/reports/report-builder.html',context)  
+
+def hr_dash(request):
+    context={}
+    return render(request,'hrms/admin/reports/hr-dashboard.html',context)      
+
 
 # ============================REPORTS END===========================================
 
 # ============================SETTINGS START=========================================
 
 def system_config(request):
-    pass
+    context = {}
+    return render(request,'hrms/admin/settings/system-config.html',context)
+
+def roles_and_permissions(request):
+    context={}
+    return render(request,'hrms/admin/settings/roles-and-permissions.html',context)
+
+def notification_settings(request):
+    context = {}
+    return render(request,'hrms/admin/settings/notification-settings.html',context)
 
 # ============================SETTINGS END===========================================
 
