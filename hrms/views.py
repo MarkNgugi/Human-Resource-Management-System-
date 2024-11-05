@@ -44,16 +44,21 @@ def offboarding(request):
 # ============================HIRING AND ONBOARDING START============================
 
 def job_posting(request):
-    pass
+    context={}
+    return render(request,'hrms/admin/hiring-and-onboarding/jobposting.html',context)
 
 def application_tracking(request):
-    pass
+    context={}
+    return render(request,'hrms/admin/hiring-and-onboarding/applications-tracking.html',context)
 
 def interview_scheduling(request):
-    pass
+    context={}
+    return render(request,'hrms/admin/hiring-and-onboarding/interview-scheduling.html',context)
 
 def onboarding_workflow(request):
-    pass
+    context={}
+    return render(request,'hrms/admin/hiring-and-onboarding/onboarding.html',context)
+
 # ============================HIRING AND ONBOARDING END==============================
 
 # ============================ATTENDANCE AND LEAVE START============================

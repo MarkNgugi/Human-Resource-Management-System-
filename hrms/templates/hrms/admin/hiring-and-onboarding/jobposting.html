@@ -1,0 +1,203 @@
+{% extends 'hrms/admin/base.html' %}
+
+{% block content %}
+
+<style>
+    /* Base styles */
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #f0f3f7, #d9e3ea);
+        color: #333;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 30px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    /* Form Elements */
+    .form-group label {
+        font-weight: 600;
+        color: #444;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 12px;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        transition: background-color 0.3s;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .form-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 0.9rem;
+    }
+
+    .form-footer a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Job Posting List */
+    .job-list {
+        margin-top: 30px;
+    }
+
+    .job-item {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9;
+        position: relative;
+    }
+
+    .job-item h5 {
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .job-item .actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .btn-edit, .btn-delete {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #007bff;
+        font-size: 0.9rem;
+        margin-left: 10px;
+    }
+
+    .btn-edit:hover, .btn-delete:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+        .header {
+            font-size: 1.8rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-group label {
+            font-size: 0.9rem;
+        }
+        .btn-submit {
+            font-size: 0.9rem;
+        }
+        .header {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="header">Job Postings Management</div>
+        
+        <form>
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" class="form-control" id="jobTitle" placeholder="Enter job title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="jobDescription">Job Description</label>
+                <textarea class="form-control" id="jobDescription" rows="4" placeholder="Enter job description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="jobRequirements">Requirements</label>
+                <textarea class="form-control" id="jobRequirements" rows="3" placeholder="Enter job requirements" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="postingDate">Posting Date</label>
+                <input type="date" class="form-control" id="postingDate" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Create Job Posting</button>
+        </form>
+
+        <div class="job-list">
+            <h4>Existing Job Postings</h4>
+            <div class="job-item">
+                <div class="actions">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+                <h5>Software Engineer</h5>
+                <p><strong>Description:</strong> Responsible for developing software solutions.</p>
+                <p><strong>Requirements:</strong> Bachelor's degree in Computer Science.</p>
+                <p><strong>Posted on:</strong> 2024-11-05</p>
+            </div>
+            <div class="job-item">
+                <div class="actions">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+                <h5>HR Manager</h5>
+                <p><strong>Description:</strong> Manage HR processes and employee relations.</p>
+                <p><strong>Requirements:</strong> Experience in HR management.</p>
+                <p><strong>Posted on:</strong> 2024-11-02</p>
+            </div>
+            <!-- Add more job items as necessary -->
+        </div>
+
+        <div class="form-footer">
+            <p>Want to go back? <a href="#">Return to Dashboard</a></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+{% endblock %}

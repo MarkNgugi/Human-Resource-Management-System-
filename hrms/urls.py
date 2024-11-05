@@ -10,5 +10,10 @@ urlpatterns = [
     path('employee-profile/',employee_profile,name = 'employeeprofile'),
     path('new-employee',new_employee,name='newemployee'),
     path('document_management',document_management,name='documentmanagement'),
-    path('offboarding',offboarding,name='offboarding')
+    path('offboarding',offboarding,name='offboarding'),
+
+    path('job-postings',job_posting,name='jobpostings'),
+    path('applications-tracking',application_tracking,name='applicationtracking'),
+    path('interview-scheduling',interview_scheduling,name='interviewscheduling'),
+    path('onboarding-workflow',onboarding_workflow,name='onboardingworkflow')
 ]
