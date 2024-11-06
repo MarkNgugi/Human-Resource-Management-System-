@@ -8,7 +8,7 @@ urlpatterns = [
     path('employee_dashboard/', employee_dashboard, name='employee_dashboard'),
 
     path('employee-profile/',employee_profile,name = 'employeeprofile'),
-    path('new-employee',new_employee,name='newemployee'),
+    path('add_employee/', add_employee, name='addemployee'),
     path('document_management',document_management,name='documentmanagement'),
     path('offboarding',offboarding,name='offboarding'),
 

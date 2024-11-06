@@ -1,5 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from accounts.forms import EmployeeCreationForm
+from django.db import IntegrityError
+from django.contrib.auth.hashers import make_password
+from accounts.models import CustomUser
 
 @login_required
 def dashboard(request):
@@ -12,7 +17,32 @@ def dashboard(request):
     elif user_role == 'employee':
         return redirect('employee_dashboard')
     else:
-        return redirect('login')
+        return redirect('login') 
+
+
+
+@login_required
+def add_employee(request):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+
+    form = EmployeeCreationForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        # Use form.save() to directly create and save the CustomUser instance
+        user = form.save(commit=False)
+        user.password = make_password(form.cleaned_data['password'])
+        user.save()
+
+        return redirect('admin_dashboard')
+
+    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/employee-management/add_emloyee.html', {'form': form})
+
+
+
+
+
+
 
 # ================================================================================================
                                         # ADMIN START
