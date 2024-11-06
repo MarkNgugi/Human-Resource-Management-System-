@@ -20,30 +20,6 @@ def dashboard(request):
         return redirect('login') 
 
 
-
-@login_required
-def add_employee(request):
-    if request.user.role != 'admin':
-        return redirect('dashboard')
-
-    form = EmployeeCreationForm(request.POST or None)
-
-    if request.method == 'POST' and form.is_valid():
-        # Use form.save() to directly create and save the CustomUser instance
-        user = form.save(commit=False)
-        user.password = make_password(form.cleaned_data['password'])
-        user.save()
-
-        return redirect('admin_dashboard')
-
-    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/employee-management/add_emloyee.html', {'form': form})
-
-
-
-
-
-
-
 # ================================================================================================
                                         # ADMIN START
 # ================================================================================================
@@ -54,12 +30,26 @@ def admin_dashboard(request):
  
 # ============================EMPLOYEE MANAGEMENT START============================
 def employee_profile(request):
-    context = {}
+    employees = CustomUser.objects.filter(role__in=['employee','hr_manager'])
+    context = {'employees':employees}
     return render(request,'hrms/admin/employee-management/employee_profile.html',context)
 
-def new_employee(request):
-    context={}
-    return render(request,'hrms/admin/employee-management/new_employee.html',context)
+@login_required
+def add_employee(request):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+
+    form = EmployeeCreationForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():        
+        user = form.save(commit=False)
+        user.password = make_password(form.cleaned_data['password'])
+        user.save()
+
+        return redirect('employeeprofile')
+
+    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/employee-management/add_emloyee.html', {'form': form})
+
 
 def document_management(request):
     context={}

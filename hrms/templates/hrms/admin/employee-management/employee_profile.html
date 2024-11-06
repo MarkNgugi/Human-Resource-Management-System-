@@ -93,68 +93,35 @@
 
 <body>
     <div class="container-fluid">
-        <!-- Employee Records Section -->
         <div class="container mt-4">
             <h2 class="text-center">Employee Records</h2>
 
-            <!-- Search Bar -->
             <div class="search-bar text-center">
                 <input type="text" id="searchInput" placeholder="Search for employees..." class="form-control w-50 mx-auto">
             </div>
 
+            <!-- Employee Cards in a Single Row -->
             <div class="row justify-content-center">
-                <!-- Employee Card Example -->
+                {% for employee in employees %}
                 <div class="col-md-3 col-sm-6 mb-4 d-flex align-items-stretch employee-card">
                     <div class="card text-center">
                         <img src="/static/images/faces/face1.jpg" class="card-img-top" alt="Employee 1">
                         <div class="card-body">
-                            <h5 class="card-title">John Doe</h5>
-                            <p class="card-text">Position: Software Engineer</p>
-                            <p class="card-text">Department: IT</p>
-                            <p class="card-text"><i class="fas fa-envelope"></i> john.doe@example.com</p>
+                            <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>
+                            <p class="card-text"><b>Position:</b> {{ employee.position }}</p>
+                            <p class="card-text"><b>Department:</b> {{ employee.department }}</p>
+                            <p class="card-text"><b>Role:</b> {{ employee.role }}</p>
+                            <p class="card-text"><i class="mdi mdi-email"></i> <b>{{ employee.email }}</b></p>
                             <a href="#" class="btn btn-primary">View Profile</a>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3 col-sm-6 mb-4 d-flex align-items-stretch employee-card">
-                    <div class="card text-center">
-                        <img src="/static/images/faces/face2.jpg" class="card-img-top" alt="Employee 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Jane Smith</h5>
-                            <p class="card-text">Position: HR Manager</p>
-                            <p class="card-text">Department: Human Resources</p>
-                            <p class="card-text"><i class="fas fa-envelope"></i> jane.smith@example.com</p>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6 mb-4 d-flex align-items-stretch employee-card">
-                    <div class="card text-center">
-                        <img src="/static/images/faces/face3.jpg" class="card-img-top" alt="Employee 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Mike Johnson</h5>
-                            <p class="card-text">Position: Project Manager</p>
-                            <p class="card-text">Department: Operations</p>
-                            <p class="card-text"><i class="fas fa-envelope"></i> mike.johnson@example.com</p>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add more employee cards as needed -->
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS, Popper.js, jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script>
-        // Search functionality
         document.getElementById('searchInput').addEventListener('keyup', function() {
             var input = this.value.toLowerCase();
             var cards = document.querySelectorAll('.employee-card');

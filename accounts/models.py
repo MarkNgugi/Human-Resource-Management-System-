@@ -14,3 +14,4 @@ class CustomUser(AbstractUser):
     position = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
+ 
