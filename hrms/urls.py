@@ -9,25 +9,26 @@ urlpatterns = [
 
     path('employee-profile/',employee_profile,name = 'employeeprofile'),
     path('add_employee/', add_employee, name='addemployee'),
-    path('document_management',document_management,name='documentmanagement'),
-    path('offboarding',offboarding,name='offboarding'),
+    path('document_management/',document_management,name='documentmanagement'),
+    path('offboarding/',offboarding,name='offboarding'),
 
-    path('job-postings',job_posting,name='jobpostings'),
-    path('applications-tracking',application_tracking,name='applicationtracking'),
-    path('interview-scheduling',interview_scheduling,name='interviewscheduling'),
-    path('onboarding-workflow',onboarding_workflow,name='onboardingworkflow'),
+    path('job-postings/',job_posting,name='jobpostings'),
+    path('create_job_post/', create_job_post, name='createjobpost'),
+    path('applications-tracking/',application_tracking,name='applicationtracking'),
+    path('interview-scheduling/',interview_scheduling,name='interviewscheduling'),
+    path('onboarding-workflow/',onboarding_workflow,name='onboardingworkflow'),
 
-    path('time-tracking',time_tracking,name='timetracking'),
-    path('report-generation',attendance_reports_generation,name='attendancereportsgeneration'),
-    path('leave-approval',leave_approval,name='leaveapproval'),
-    path('leave-balance',leave_balance,name='leavebalance'),
+    path('time-tracking/',time_tracking,name='timetracking'),
+    path('report-generation/',attendance_reports_generation,name='attendancereportsgeneration'),
+    path('leave-approval/',leave_approval,name='leaveapproval'),
+    path('leave-balance/',leave_balance,name='leavebalance'),
 
-    path('report-builder',report_builder,name='reportbuilder'),
-    path('hr-dash',report_builder,name='hrdash'),
+    path('report-builder/',report_builder,name='reportbuilder'),
+    path('hr-dash/',report_builder,name='hrdash'),
 
 
-    path('system-config',system_config,name='systemconfig'),
-    path('roles-and-permissions',roles_and_permissions,name='rolesandpermissions'),
-    path('notification-settings',notification_settings,name='notificationsettings'),
+    path('system-config/',system_config,name='systemconfig'),
+    path('roles-and-permissions/',roles_and_permissions,name='rolesandpermissions'),
+    path('notification-settings/',notification_settings,name='notificationsettings'),
 
 ]

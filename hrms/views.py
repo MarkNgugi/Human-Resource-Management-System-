@@ -5,6 +5,8 @@ from accounts.forms import EmployeeCreationForm
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password
 from accounts.models import CustomUser
+from .forms import JobPostForm
+from .models import *
 
 @login_required
 def dashboard(request):
@@ -62,10 +64,23 @@ def offboarding(request):
 # ============================EMPLOYEE MANAGEMENT END==============================
 
 # ============================HIRING AND ONBOARDING START============================
-
+ 
 def job_posting(request):
-    context={}
+    jobpostings = JobPost.objects.all()
+    context={'jobpostings':jobpostings}
     return render(request,'hrms/admin/hiring-and-onboarding/jobposting.html',context)
+
+def create_job_post(request):
+    if request.method == 'POST':
+        form = JobPostForm(request.POST)
+        if form.is_valid():
+            form.save()  
+            return redirect('jobpostings') 
+    else:
+        form = JobPostForm()
+    
+    context = {'form':form}
+    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/hiring-and-onboarding/jobposting-form.html', context)
 
 def application_tracking(request):
     context={}
