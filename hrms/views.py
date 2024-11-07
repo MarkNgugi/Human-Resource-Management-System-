@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.forms import EmployeeCreationForm
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password
 from accounts.models import CustomUser
-from .forms import JobPostForm
+from .forms import JobPostForm,LeaveRequestForm
 from .models import *
 
 @login_required
@@ -106,9 +106,18 @@ def attendance_reports_generation(request):
     context={}
     return render(request,'hrms/admin/attendance-and-leave/report-generation.html',context)
 
-def leave_approval(request):
-    context={}
-    return render(request,'hrms/admin/attendance-and-leave/leave-approval.html',context)    
+@login_required
+def leave_requests(request):
+    leave_requests = LeaveRequest.objects.all()
+    return render(request, 'hrms/admin/attendance-and-leave/leave_requests.html', {'leave_requests': leave_requests})
+
+@login_required
+def update_leave_status(request, leave_id, status):
+    leave_request = get_object_or_404(LeaveRequest, id=leave_id)
+    if status in ['APPROVED', 'DECLINED']:
+        leave_request.status = status
+        leave_request.save()
+    return redirect('reviewleaves')
 
 def leave_balance(request):
     context={}
@@ -153,12 +162,53 @@ def notification_settings(request):
 
 
 
+# ================================================================================================
+                                        # HR START
+# ================================================================================================
 
 @login_required
 def hr_manager_dashboard(request):
     return render(request, 'hrms/hr/hr_manager_dashboard.html')
 
+
+# ================================================================================================
+                                        # HR END
+# ================================================================================================
+
+
+# ================================================================================================
+                                        # EMPLOYEE START
+# ================================================================================================
+
 @login_required
 def employee_dashboard(request):
     return render(request, 'hrms/employee/employee_dashboard.html')
 
+
+# ============================LEAVE MANAGEMENT START===========================================
+
+@login_required
+def employee_leave_status(request):
+    leave_requests = LeaveRequest.objects.filter(employee=request.user)
+    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/employee/leave-management/leave-status.html', {'leave_requests': leave_requests})
+
+
+@login_required
+def apply_leave(request):
+    if request.method == 'POST':
+        form = LeaveRequestForm(request.POST)
+        if form.is_valid():
+            leave_request = form.save(commit=False)
+            leave_request.employee = request.user
+            leave_request.save()
+            return redirect('employeeleavestatus')  
+    else:
+        form = LeaveRequestForm()
+    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/employee/leave-management/apply-leave.html', {'form': form})
+
+# ============================LEAVE MANAGEMENT END===========================================
+
+
+# ================================================================================================
+                                        # EMPLOYEE END
+# ================================================================================================

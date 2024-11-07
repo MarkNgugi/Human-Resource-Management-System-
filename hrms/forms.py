@@ -1,5 +1,5 @@
 from django import forms
-from .models import JobPost
+from .models import JobPost, LeaveRequest
 
 class JobPostForm(forms.ModelForm):
     class Meta:
@@ -28,4 +28,15 @@ class JobPostForm(forms.ModelForm):
             'job_title': 'Job Title',
             'job_description': 'Job Description',
             'job_requirements': 'Requirements',
+        }
+
+
+
+class LeaveRequestForm(forms.ModelForm):
+    class Meta:
+        model = LeaveRequest
+        fields = ['start_date', 'end_date', 'leave_type', 'reason']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
         }

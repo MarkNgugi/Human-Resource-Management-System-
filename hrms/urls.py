@@ -20,7 +20,8 @@ urlpatterns = [
 
     path('time-tracking/',time_tracking,name='timetracking'),
     path('report-generation/',attendance_reports_generation,name='attendancereportsgeneration'),
-    path('leave-approval/',leave_approval,name='leaveapproval'),
+    path('review_leaves/',leave_requests,name='reviewleaves'),
+    path('update_leave_status/<int:leave_id>/<str:status>/',update_leave_status, name='update_leave_status'),
     path('leave-balance/',leave_balance,name='leavebalance'),
 
     path('report-builder/',report_builder,name='reportbuilder'),
@@ -30,5 +31,21 @@ urlpatterns = [
     path('system-config/',system_config,name='systemconfig'),
     path('roles-and-permissions/',roles_and_permissions,name='rolesandpermissions'),
     path('notification-settings/',notification_settings,name='notificationsettings'),
+
+
+ 
+    # ====================================EMPLOYEE START======================================================
+
+
+
+    path('apply_leave/', apply_leave, name='applyleave'),
+    path('leave_status/',employee_leave_status, name='employeeleavestatus'),
+
+ 
+
+
+    # ====================================EMPLOYEE END======================================================
+
+
 
 ]
