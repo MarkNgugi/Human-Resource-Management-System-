@@ -15,3 +15,4 @@ class CustomUser(AbstractUser):
     department = models.CharField(max_length=100, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
  
+    #add gender

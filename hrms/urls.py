@@ -36,7 +36,7 @@ urlpatterns = [
  
     # ====================================EMPLOYEE START======================================================
 
-
+    path('profile/<int:id>/',my_profile,name='myprofile'),
 
     path('apply_leave/', apply_leave, name='applyleave'),
     path('leave_status/',employee_leave_status, name='employeeleavestatus'),

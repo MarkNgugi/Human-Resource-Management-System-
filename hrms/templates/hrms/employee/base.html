@@ -160,7 +160,7 @@
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle  pl-0 pr-0" href="#" data-toggle="dropdown" id="profileDropdown">
                 <i class="typcn typcn-user-outline mr-0"></i>
-                <span class="nav-profile-name">Mike</span>
+                <span class="nav-profile-name">{{user.username}}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item">
@@ -219,7 +219,7 @@
               </div>
               <div class="sidebar-profile-name">
                 <p class="sidebar-name">
-                  first last
+                  {{user.first_name}} {{user.last_name}}
                 </p>
                 <p class="sidebar-designation">
                   Welcome
@@ -252,7 +252,7 @@
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="/static/pages/ui-features/buttons.html">Update Personal Information</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'myprofile' user.id%}">View profile</a></li>
                 <li class="nav-item"> <a class="nav-link" href="/static/pages/ui-features/dropdowns.html">Upload and Manage Documents</a></li>                
               </ul>
             </div>
@@ -265,8 +265,7 @@
             </a>
             <div class="collapse" id="form-elements">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="{%url 'applyleave' %}">Apply for Leave</a></li>
-                <li class="nav-item"><a class="nav-link" href="/static/pages/forms/basic_elements.html">View Leave Balance</a></li>
+                <li class="nav-item"><a class="nav-link" href="{%url 'applyleave' %}">Apply for Leave</a></li>                
                 <li class="nav-item"><a class="nav-link" href="{%url 'employeeleavestatus'%}">Track Leave Status</a></li>
               </ul>
             </div>

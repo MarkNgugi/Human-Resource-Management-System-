@@ -184,6 +184,16 @@ def hr_manager_dashboard(request):
 def employee_dashboard(request):
     return render(request, 'hrms/employee/employee_dashboard.html')
 
+# ============================MY PROFILE START===========================================
+ 
+def my_profile(request, id):
+    employee_details = get_object_or_404(CustomUser, id=id)
+    context = {'employee_details': employee_details}
+    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/employee/profile/profile.html', context)
+
+# ============================MY PROFILE END===========================================
+
+
 
 # ============================LEAVE MANAGEMENT START===========================================
 
