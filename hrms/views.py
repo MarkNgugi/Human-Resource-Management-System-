@@ -122,14 +122,15 @@ def update_leave_status(request, leave_id, status):
 def leave_balance(request):
     context={}
     return render(request,'hrms/admin/attendance-and-leave/leave-balance.html',context)    
-
+ 
 
 # ============================ATTENDANCE AND LEAVE END==============================
 
 # ============================REPORTS START=========================================
 
 def report_builder(request):
-    context={}
+    employees = CustomUser.objects.all()
+    context={'employees':employees}
     return render(request,'hrms/admin/reports/report-builder.html',context)  
 
 def hr_dash(request):

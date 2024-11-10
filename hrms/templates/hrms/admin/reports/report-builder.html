@@ -97,6 +97,40 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
 
+    .employee-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #f9fafc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .employee-label {
+        font-size: 1rem;
+        color: #444;
+        font-weight: bold;
+    }
+
+    .employee-input {
+        flex: 1;
+        max-width: 300px;
+        padding: 8px;
+        font-size: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        background-color: #ffffff;
+        transition: all 0.2s ease;
+    }
+
+    .employee-input:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+    }    
+
     .checkbox-label {
         font-size: 1rem;
         color: #333;
@@ -153,6 +187,20 @@
 
 <div class="container">
     <div class="header">Custom Report Builder</div>
+
+    <div class="employee-section">
+        <label class="employee-label" for="employee">Select Employee:</label>
+        <select class="employee-input" id="employee" name="employee">
+            <option value="">All Employees</option>
+            {% for employee in employees %}
+                {% if employee.first_name and employee.last_name %}
+                    <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    
+    
 
     <!-- Filter Section -->
     <div class="filters-section">

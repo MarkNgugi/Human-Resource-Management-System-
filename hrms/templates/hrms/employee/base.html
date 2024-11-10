@@ -242,6 +242,8 @@
             <a class="nav-link" href="index.html">
               <i class="typcn typcn-device-desktop menu-icon"></i>
               <span class="menu-title">Dashboard <span class="badge badge-primary ml-3">New</span></span>
+              <!-- Overview of Personal Statistics (e.g., upcoming leave, total attendance days)
+              Notifications (approvals, rejections, or other updates) -->
             </a>
           </li>
           <li class="nav-item">
@@ -266,46 +268,25 @@
             <div class="collapse" id="form-elements">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"><a class="nav-link" href="{%url 'applyleave' %}">Apply for Leave</a></li>                
-                <li class="nav-item"><a class="nav-link" href="{%url 'employeeleavestatus'%}">Track Leave Status</a></li>
+                <li class="nav-item"><a class="nav-link" href="{%url 'employeeleavestatus'%}">Leave Application History</a></li>
+                <li class="nav-item"><a class="nav-link" href="">Remaining Leave Days</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
               <i class="typcn typcn-chart-pie-outline menu-icon"></i>
-              <span class="menu-title">Payroll</span>
+              <span class="menu-title">Attendance Records</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="charts">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="/static/pages/charts/chartjs.html">View Payslips</a></li>
-                <li class="nav-item"> <a class="nav-link" href="/static/pages/charts/chartjs.html">Access Tax Information</a></li>                
+                <li class="nav-item"> <a class="nav-link" href="">Monthly Attendance Report</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">View Punctuality Stats</a></li>                
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-              <i class="typcn typcn-th-small-outline menu-icon"></i>
-              <span class="menu-title">Training & Development</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="tables">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="/static/pages/tables/basic-table.html">Available Training Programs</a></li>
-                <li class="nav-item"> <a class="nav-link" href="/static/pages/tables/basic-table.html">Enroll for Training</a></li>
-              </ul>
-            </div>
-          </li>
-
         </ul>
-        <!-- <ul class="sidebar-legend">
-          <li>
-            <p class="sidebar-menu-title">Category</p>
-          </li>
-          <li class="nav-item"><a href="#" class="nav-link">#Sales</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">#Marketing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">#Growth</a></li>
-        </ul> -->
       </nav>
         <!-- partial -->
         <div class="main-panel">
