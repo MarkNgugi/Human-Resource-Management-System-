@@ -1,0 +1,11 @@
+{%extends 'hrms/admin/base.html'%}
+
+{%block content%}
+
+<h2>WELCOME TO THE ATTENDANCE PAGE</h2>
+{%for day in days%}
+
+<h3>DAYS APPLIED: {{day.days_requested}}</h3>
+{%endfor%}
+
+{%endblock%}

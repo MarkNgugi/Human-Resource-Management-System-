@@ -5,7 +5,7 @@ from accounts.forms import EmployeeCreationForm
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password
 from accounts.models import CustomUser
-from .forms import JobPostForm,LeaveRequestForm
+from .forms import LeaveRequestForm
 from .models import *
 
 @login_required
@@ -63,38 +63,18 @@ def offboarding(request):
 
 # ============================EMPLOYEE MANAGEMENT END==============================
 
-# ============================HIRING AND ONBOARDING START============================
+# ============================ATTENDANCE MANAGEMENT START============================
+
+def departments(request):
+    context = {}
+    return render(request,'hrms/admin/attendance-management/departments.html',context)
  
-def job_posting(request):
-    jobpostings = JobPost.objects.all()
-    context={'jobpostings':jobpostings}
-    return render(request,'hrms/admin/hiring-and-onboarding/jobposting.html',context)
+def dep_attendance(requestdep):
+    days = LeaveRequest.objects.all()
+    context = {'days':days}
+    return render(requestdep, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/attendance-management/department_attendance.html',context)
 
-def create_job_post(request):
-    if request.method == 'POST':
-        form = JobPostForm(request.POST)
-        if form.is_valid():
-            form.save()  
-            return redirect('jobpostings') 
-    else:
-        form = JobPostForm()
-    
-    context = {'form':form}
-    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/hiring-and-onboarding/jobposting-form.html', context)
-
-def application_tracking(request):
-    context={}
-    return render(request,'hrms/admin/hiring-and-onboarding/applications-tracking.html',context)
-
-def interview_scheduling(request):
-    context={}
-    return render(request,'hrms/admin/hiring-and-onboarding/interview-scheduling.html',context)
-
-def onboarding_workflow(request):
-    context={}
-    return render(request,'hrms/admin/hiring-and-onboarding/onboarding.html',context)
-
-# ============================HIRING AND ONBOARDING END==============================
+# ============================ATTENDANCE MANAGEMENT END==============================
 
 # ============================ATTENDANCE AND LEAVE START============================
 

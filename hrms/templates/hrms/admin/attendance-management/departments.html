@@ -1,0 +1,110 @@
+{% extends 'hrms/admin/base.html' %}
+{% block content %}
+
+<div class="department-page">
+    <style>
+        .department-page {
+            padding: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .department-page h1 {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .department-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .department-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .department-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .department-card h2 {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .department-card p {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .view-attendance-btn {
+            display: inline-block;
+            padding: 10px 30px;
+            font-size: 0.9em;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 20px;  
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            align-self: center;  
+            margin-top: auto;
+        }
+
+        .view-attendance-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+
+    
+    <h1>Our Departments</h1>
+    
+    <div class="department-container">
+        
+        <div class="department-card">
+            <h2>Human Resources</h2>
+            <p>Dedicated to employee engagement, development, and fostering a healthy work environment.</p>
+            <a href="" class="view-attendance-btn">View Attendance</a>
+        </div>
+        <div class="department-card">
+            <h2>Finance</h2>
+            <p>Ensuring financial integrity through budget planning, payroll, and compliance.</p>
+            <a href="" class="view-attendance-btn">View Attendance</a>
+        </div>
+        <div class="department-card">
+            <h2>Marketing</h2>
+            <p>Driving growth through creative strategies and brand-building campaigns.</p>
+            <a href="" class="view-attendance-btn">View Attendance</a>
+        </div>
+        
+    </div>
+
+</div>
+
+{% endblock %}

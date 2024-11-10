@@ -12,11 +12,8 @@ urlpatterns = [
     path('document_management/',document_management,name='documentmanagement'),
     path('offboarding/',offboarding,name='offboarding'),
 
-    path('job-postings/',job_posting,name='jobpostings'),
-    path('create_job_post/', create_job_post, name='createjobpost'),
-    path('applications-tracking/',application_tracking,name='applicationtracking'),
-    path('interview-scheduling/',interview_scheduling,name='interviewscheduling'),
-    path('onboarding-workflow/',onboarding_workflow,name='onboardingworkflow'),
+    path('attendance/department',departments,name='departments'),
+    path('departmant-attendance/',dep_attendance,name='dep_attendance'),
 
     path('time-tracking/',time_tracking,name='timetracking'),
     path('report-generation/',attendance_reports_generation,name='attendancereportsgeneration'),
