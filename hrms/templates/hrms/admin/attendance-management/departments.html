@@ -86,22 +86,13 @@
     <h1>Our Departments</h1>
     
     <div class="department-container">
-        
+        {%for department in departments%}
         <div class="department-card">
-            <h2>Human Resources</h2>
+            <h2>{{department.name}}</h2>
             <p>Dedicated to employee engagement, development, and fostering a healthy work environment.</p>
-            <a href="" class="view-attendance-btn">View Attendance</a>
+            <a href="{%url 'depattendance' department.id%}" class="view-attendance-btn">View Attendance</a>
         </div>
-        <div class="department-card">
-            <h2>Finance</h2>
-            <p>Ensuring financial integrity through budget planning, payroll, and compliance.</p>
-            <a href="" class="view-attendance-btn">View Attendance</a>
-        </div>
-        <div class="department-card">
-            <h2>Marketing</h2>
-            <p>Driving growth through creative strategies and brand-building campaigns.</p>
-            <a href="" class="view-attendance-btn">View Attendance</a>
-        </div>
+        {%endfor%}
         
     </div>
 

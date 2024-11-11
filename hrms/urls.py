@@ -13,7 +13,9 @@ urlpatterns = [
     path('offboarding/',offboarding,name='offboarding'),
 
     path('attendance/department',departments,name='departments'),
-    path('departmant-attendance/',dep_attendance,name='dep_attendance'),
+    path('departmant-attendance/<int:id>/',dep_attendance,name='depattendance'),
+    path('attendance-reports',attendance_reports,name='attendancereports'),
+    
 
     path('time-tracking/',time_tracking,name='timetracking'),
     path('report-generation/',attendance_reports_generation,name='attendancereportsgeneration'),

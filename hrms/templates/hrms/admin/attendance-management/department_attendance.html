@@ -1,11 +1,213 @@
-{%extends 'hrms/admin/base.html'%}
+{% extends 'hrms/admin/base.html' %}
+{% block content %}
 
-{%block content%}
+<div class="attendance-page">
+    <style>
+        .attendance-page {
+            padding: 20px;
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-<h2>WELCOME TO THE ATTENDANCE PAGE</h2>
-{%for day in days%}
+        /* Page Title */
+        .attendance-page h1 {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-<h3>DAYS APPLIED: {{day.days_requested}}</h3>
-{%endfor%}
+        /* Employee Selection Section */
+        .employee-selector {
+            margin-bottom: 30px;
+        }
 
-{%endblock%}
+        .employee-selector label {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        .employee-selector select {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .summary-card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .summary-card h2 {
+            font-size: 1.5em;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .summary-card p {
+            font-size: 1em;
+            color: #7f8c8d;
+        }
+
+        /* Date Range Filter */
+        .date-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .date-filter input[type="date"] {
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Attendance Table */
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .attendance-table th, .attendance-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .attendance-table th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .attendance-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .attendance-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+
+    <!-- Page Title -->
+    <h1>Attendance Details - {{department.name}}</h1>
+
+    <!-- Employee Selection Section -->
+    <div class="employee-selector">
+        <label for="employee-select">Select Employee:</label>
+        <select id="employee-select" name="employee-select">
+            <option value="">-- Select an Employee --</option>
+            <!-- Example: Replace these options with dynamic employee data from backend -->
+            <option value="employee-1">John Doe</option>
+            <option value="employee-2">Jane Smith</option>
+            <!-- Add more employee options dynamically -->
+        </select>
+    </div>
+
+    <!-- Summary Section: General Attendance Stats -->
+    <div class="summary-section">
+        <div class="summary-card">
+            <h2>Total Days</h2>
+            <p>30 days</p>
+        </div>
+        <div class="summary-card">
+            <h2>Present Days</h2>
+            <p>24 days</p>
+        </div>
+        <div class="summary-card">
+            <h2>Absent Days</h2>
+            <p>6 days</p>
+        </div>
+        <div class="summary-card">
+            <h2>Late Entries</h2>
+            <p>3 times</p>
+        </div>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="date-filter">
+        <label for="start-date">From:</label>
+        <input type="date" id="start-date" name="start-date">
+        <label for="end-date">To:</label>
+        <input type="date" id="end-date" name="end-date">
+        <button class="filter-button">Filter</button>
+    </div>
+
+    {% for record in attendance_records %}
+    <table class="attendance-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Employee Name</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Status</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <td>2024-11-01</td>
+                <td>{{ record.employee.first_name }} {{ record.employee.last_name }}</td>
+                <td>9:00 AM</td>
+                <td>5:00 PM</td>
+                <td>Present</td>
+                <td>On time</td>
+            </tr>
+           
+        </tbody>
+    </table>
+    {%endfor%}
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2024 Company Name. All rights reserved.
+    </div>
+
+</div>
+
+{% endblock %}

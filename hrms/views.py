@@ -4,7 +4,7 @@ from django.contrib import messages
 from accounts.forms import EmployeeCreationForm
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password
-from accounts.models import CustomUser
+from accounts.models import *
 from .forms import LeaveRequestForm
 from .models import *
 
@@ -66,13 +66,23 @@ def offboarding(request):
 # ============================ATTENDANCE MANAGEMENT START============================
 
 def departments(request):
-    context = {}
+    departments = Department.objects.exclude(name="ADMIN")
+    context = {'departments':departments}
     return render(request,'hrms/admin/attendance-management/departments.html',context)
  
-def dep_attendance(requestdep):
-    days = LeaveRequest.objects.all()
-    context = {'days':days}
+def dep_attendance(requestdep,id):  
+    department = Department.objects.get(id=id)  
+    attendance_records = AttendanceRecord.objects.filter(employee__department=department)
+
+    context = {
+        'department':department,
+        'attendance_records':attendance_records
+        }
     return render(requestdep, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/attendance-management/department_attendance.html',context)
+
+def attendance_reports(request):
+    context={}
+    return render(request,'/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/attendance-management/attendance-reports.html',context)
 
 # ============================ATTENDANCE MANAGEMENT END==============================
 

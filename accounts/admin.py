@@ -7,10 +7,10 @@ admin.site.register(Department)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('role',)}),
+        (None, {'fields': ('role','gender','department')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('role',)}),
+        (None, {'fields': ('role','gender','department')}),
     )
 
 admin.site.register(CustomUser, CustomUserAdmin)
