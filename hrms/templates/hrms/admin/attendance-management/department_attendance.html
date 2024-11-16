@@ -150,15 +150,15 @@
     <!-- Summary Section: General Attendance Stats -->
     <div class="summary-section">
         <div class="summary-card">
-            <h2>Total Days</h2>
+            <h2>Total Employees</h2>
             <p>30 days</p>
         </div>
         <div class="summary-card">
-            <h2>Present Days</h2>
+            <h2>Present Today</h2>
             <p>24 days</p>
         </div>
         <div class="summary-card">
-            <h2>Absent Days</h2>
+            <h2>Absent Today</h2>
             <p>6 days</p>
         </div>
         <div class="summary-card">
@@ -191,11 +191,11 @@
         <tbody>
             
             <tr>
-                <td>2024-11-01</td>
-                <td>{{ record.employee.first_name }} {{ record.employee.last_name }}</td>
-                <td>9:00 AM</td>
-                <td>5:00 PM</td>
-                <td>Present</td>
+                <td>{{record.created_at}}</td>
+                <td>{{record.employee.first_name }} {{ record.employee.last_name }}</td>
+                <td>{{record.check_in_time}}</td>
+                <td>{{record.check_out_time}}</td>
+                <td>{{record.attendance_status}}</td>
                 <td>On time</td>
             </tr>
            

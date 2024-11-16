@@ -1,0 +1,23 @@
+<table>
+    <thead>
+      <tr>
+        <th>Report Name</th>
+        <th>Metrics</th>
+        <th>Filters</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+      <tr>
+        <td>{{ report.report_name }}</td>
+        <td>{{ report.metrics_selected }}</td>
+        <td>{{ report.filters_used }}</td>
+        <td>
+          <a href="{% url 'export_report_pdf' report.id %}">Download PDF</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.forms import EmployeeCreationForm
@@ -7,6 +8,9 @@ from django.contrib.auth.hashers import make_password
 from accounts.models import *
 from .forms import LeaveRequestForm
 from .models import *
+from datetime import date
+from weasyprint import HTML
+import json
 
 @login_required
 def dashboard(request):
@@ -99,7 +103,7 @@ def attendance_reports_generation(request):
 @login_required
 def leave_requests(request):
     leave_requests = LeaveRequest.objects.all()
-    return render(request, 'hrms/admin/attendance-and-leave/leave_requests.html', {'leave_requests': leave_requests})
+    return render(request, 'hrms/admin/leave-approvals/leave_requests.html', {'leave_requests': leave_requests})
 
 @login_required
 def update_leave_status(request, leave_id, status):
@@ -111,17 +115,70 @@ def update_leave_status(request, leave_id, status):
 
 def leave_balance(request):
     context={}
-    return render(request,'hrms/admin/attendance-and-leave/leave-balance.html',context)    
+    return render(request,'/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/leave-approvals/leave-balance.html',context)    
  
 
 # ============================ATTENDANCE AND LEAVE END==============================
 
 # ============================REPORTS START=========================================
 
+
 def report_builder(request):
     employees = CustomUser.objects.all()
-    context={'employees':employees}
-    return render(request,'hrms/admin/reports/report-builder.html',context)  
+
+    if request.method == "POST":
+        # Gather form data
+        employee = request.POST.get("employee")
+        department = request.POST.get("department")
+        job_role = request.POST.get("jobRole")
+        date_range = request.POST.get("date_range")
+        metrics = request.POST.getlist("metrics")
+
+        # Generate Report Data
+        report_name = f"Report_{date.today().strftime('%Y-%m-%d')}"
+        filters_used = {
+            "employee": employee,
+            "department": department,
+            "job_role": job_role,
+            "date_range": date_range,
+        }
+        report = GeneratedReport.objects.create(
+            report_name=report_name,
+            metrics_selected=metrics,
+            filters_used=filters_used,
+        )
+
+        # Generate PDF
+        html_template = "hrms/admin/reports/pdf_template.html"
+        pdf_content = render(request, html_template, {
+            "metrics": metrics,
+            "filters": filters_used,
+        }).content
+        pdf_file_path = f"reports/{report_name}.pdf"
+        HTML(string=pdf_content).write_pdf(pdf_file_path)
+        report.pdf_file = pdf_file_path
+        report.save()
+
+        return redirect("report_list")  
+
+    return render(request, 'hrms/admin/reports/report-builder.html', {'employees': employees})
+
+def report_list(request):
+    reports = GeneratedReport.objects.all()
+    return render(request, 'hrms/admin/reports/report-list.html', {'reports': reports})
+
+
+def export_report_pdf(request, report_id):
+    try:
+        report = GeneratedReport.objects.get(id=report_id)
+        with open(report.pdf_file.path, 'rb') as pdf_file:
+            response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{report.report_name}.pdf"'
+            return response
+    except GeneratedReport.DoesNotExist:
+        return HttpResponse("Report not found", status=404)
+
+ 
 
 def hr_dash(request):
     context={}

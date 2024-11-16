@@ -188,77 +188,74 @@
 <div class="container">
     <div class="header">Custom Report Builder</div>
 
-    <div class="employee-section">
-        <label class="employee-label" for="employee">Select Employee:</label>
-        <select class="employee-input" id="employee" name="employee">
-            <option value="">All Employees</option>
-            {% for employee in employees %}
-                {% if employee.first_name and employee.last_name %}
+    <form method="post" action="{% url 'reportbuilder' %}" id="reportForm">
+        {% csrf_token %}
+        
+        <div class="employee-section">
+            <label class="employee-label" for="employee">Select Employee:</label>
+            <select class="employee-input" id="employee" name="employee">
+                <option value="">All Employees</option>
+                {% for employee in employees %}
                     <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    
-    
-
-    <!-- Filter Section -->
-    <div class="filters-section">
-        <div class="filter-group">
-            <label class="filter-label" for="department">Department:</label>
-            <select class="filter-input" id="department" name="department">
-                <option value="">All Departments</option>
-                <option value="HR">HR</option>
-                <option value="Finance">Finance</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Marketing">Marketing</option>
+                {% endfor %}
             </select>
         </div>
-
-        <div class="filter-group">
-            <label class="filter-label" for="jobRole">Job Role:</label>
-            <select class="filter-input" id="jobRole" name="jobRole">
-                <option value="">All Roles</option>
-                <option value="Manager">Manager</option>
-                <option value="Developer">Developer</option>
-                <option value="Designer">Designer</option>
-                <option value="Analyst">Analyst</option>
-            </select>
+    
+        <div class="filters-section">
+            <div class="filter-group">
+                <label class="filter-label" for="department">Department:</label>
+                <select class="filter-input" id="department" name="department">
+                    <option value="">All Departments</option>
+                    <option value="HR">HR</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Marketing">Marketing</option>
+                </select>
+            </div>
+    
+            <div class="filter-group">
+                <label class="filter-label" for="jobRole">Job Role:</label>
+                <select class="filter-input" id="jobRole" name="jobRole">
+                    <option value="">All Roles</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Developer">Developer</option>
+                    <option value="Designer">Designer</option>
+                    <option value="Analyst">Analyst</option>
+                </select>
+            </div>
+    
+            <div class="filter-group">
+                <label class="filter-label" for="dateRange">Date Range:</label>
+                <input type="date" class="filter-input" id="dateRange" name="date_range">
+            </div>
         </div>
-
-        <div class="filter-group">
-            <label class="filter-label" for="dateRange">Date Range:</label>
-            <input type="date" class="filter-input" id="dateRange" name="dateRange">
+    
+        <div class="metrics-section">
+            <label class="metric-checkbox">
+                <input type="checkbox" name="metrics" value="demographics">
+                <span class="checkbox-label">Employee Demographics</span>
+            </label>
+            <label class="metric-checkbox">
+                <input type="checkbox" name="metrics" value="turnover">
+                <span class="checkbox-label">Employee Turnover</span>
+            </label>
+            <label class="metric-checkbox">
+                <input type="checkbox" name="metrics" value="attendance">
+                <span class="checkbox-label">Attendance</span>
+            </label>
+            <label class="metric-checkbox">
+                <input type="checkbox" name="metrics" value="punctuality">
+                <span class="checkbox-label">Punctuality</span>
+            </label>
+            <label class="metric-checkbox">
+                <input type="checkbox" name="metrics" value="leave">
+                <span class="checkbox-label">Leave Patterns</span>
+            </label>
         </div>
-    </div>
-
-    <!-- Metrics Selection Section -->
-    <div class="metrics-section">
-        <label class="metric-checkbox">
-            <input type="checkbox" name="metrics" value="demographics">
-            <span class="checkbox-label">Employee Demographics</span>
-        </label>
-        <label class="metric-checkbox">
-            <input type="checkbox" name="metrics" value="turnover">
-            <span class="checkbox-label">Employee Turnover</span>
-        </label>
-        <label class="metric-checkbox">
-            <input type="checkbox" name="metrics" value="attendance">
-            <span class="checkbox-label">Attendance</span>
-        </label>
-        <label class="metric-checkbox">
-            <input type="checkbox" name="metrics" value="punctuality">
-            <span class="checkbox-label">Punctuality</span>
-        </label>
-        <label class="metric-checkbox">
-            <input type="checkbox" name="metrics" value="leave">
-            <span class="checkbox-label">Leave Patterns</span>
-        </label>
-    </div>
-
-    <!-- Generate Report Button -->
-    <button class="generate-btn" onclick="generateReport()">Generate Report</button>
-</div>
+    
+        <button type="submit" class="generate-btn">Generate Report</button>
+    </form>
+    
 
 <script>
     function generateReport() {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Custom Report</h1>
+        <p>Date: {{ filters.date_range }}</p>
+    </div>
+
+    {% for metric in metrics %}
+    <div class="section">
+        <h2>{{ metric|title }}</h2>
+        <p>Data for {{ metric }} goes here.</p>
+    </div>
+    {% endfor %}
+</body>
+</html>

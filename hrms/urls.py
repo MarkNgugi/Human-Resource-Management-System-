@@ -24,6 +24,8 @@ urlpatterns = [
     path('leave-balance/',leave_balance,name='leavebalance'),
 
     path('report-builder/',report_builder,name='reportbuilder'),
+    path('report-list/', report_list, name='report_list'),
+    path('export-report/<int:report_id>/', export_report_pdf, name='export_report_pdf'),
     path('hr-dash/',report_builder,name='hrdash'),
 
 

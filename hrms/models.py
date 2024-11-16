@@ -17,6 +17,7 @@ class AttendanceRecord(models.Model):
     source = models.CharField(max_length=50, choices=[('biometric', 'Biometric'), ('web', 'Web Login')])
     is_late = models.BooleanField(default=False)
     late_duration = models.DurationField(null=True, blank=True)
+    created_at=models.DateField(null=True, blank=True)
 
 
 class LeaveRequest(models.Model):
@@ -53,4 +54,12 @@ class LeaveRequest(models.Model):
 
     
 
+class GeneratedReport(models.Model):
+    report_name = models.CharField(max_length=255)
+    metrics_selected = models.JSONField() 
+    filters_used = models.JSONField()  # Stores filters as a dictionary
+    pdf_file = models.FileField(upload_to='reports/')
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.report_name
