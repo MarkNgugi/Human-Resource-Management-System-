@@ -151,21 +151,26 @@
     <div class="summary-section">
         <div class="summary-card">
             <h2>Total Employees</h2>
-            <p>30 days</p>
+            <p>{{ total_employees }}</p>
         </div>
         <div class="summary-card">
             <h2>Present Today</h2>
-            <p>24 days</p>
+            <p>{{ present_today }}</p>
         </div>
         <div class="summary-card">
             <h2>Absent Today</h2>
-            <p>6 days</p>
+            <p>{{ absent_today }}</p>
         </div>
         <div class="summary-card">
             <h2>Late Entries</h2>
-            <p>3 times</p>
+            <p>{{ late_entries }}</p>
         </div>
+        <div class="summary-card">
+            <h2>On Leave</h2>
+            <p>{{ on_leave_today }}</p>
+        </div>        
     </div>
+
 
     <!-- Date Range Filter -->
     <div class="date-filter">

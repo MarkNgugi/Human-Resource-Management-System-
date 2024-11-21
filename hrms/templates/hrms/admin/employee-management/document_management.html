@@ -1,283 +1,187 @@
-{%extends 'hrms/admin/base.html'%}
-{%block content%}
-    <style>
-        /* Global Styles */
-        body {
-            background-color: #f0f4f8;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
+{% extends 'hrms/admin/base.html' %}
 
-        .container {
-            max-width: 1200px;
-            margin-top: 40px;
-        }
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h4>Document Management</h4>
+                        <p>Select an employee and department to manage documents</p>
+                    </div>
+                    <div class="card-body">
 
-        /* Search Bar */
-        .search-bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-            background-color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+                        <!-- Employee and Department Filters -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="employeeSelect">Select Employee</label>
+                                <select id="employeeSelect" class="form-control">
+                                    <option value="">-- Select Employee --</option>
+                                    <option value="1">John Doe</option>
+                                    <option value="2">Jane Smith</option>
+                                    <option value="3">Alice Johnson</option>
+                                </select>
+                            </div>
 
-        .search-bar input {
-            border: none;
-            outline: none;
-            padding: 10px 15px;
-            font-size: 1rem;
-            width: 100%;
-            border-radius: 50px;
-        }
+                            <div class="col-md-6 mb-3">
+                                <label for="departmentSelect">Select Department</label>
+                                <select id="departmentSelect" class="form-control">
+                                    <option value="">-- Select Department --</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="hr">HR</option>
+                                    <option value="it">IT</option>
+                                </select>
+                            </div>
+                        </div>
 
-        .search-bar button {
-            background-color: #007bff;
-            border: none;
-            color: #ffffff;
-            padding: 8px 20px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+                        <!-- Search Button -->
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button class="btn btn-info" id="searchBtn">Search</button>
+                            </div>
+                        </div>
 
-        .search-bar button:hover {
-            background-color: #0056b3;
-        }
+                        <!-- Filter Section with Documents -->
+                        <div id="documentSection" style="display:none;">
+                            <h5 class="text-primary mt-4">Documents for <span id="employeeName">John Doe</span></h5>
 
-        /* Upload Section */
-        .upload-section {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
+                            <!-- Document Categories Tabs -->
+                            <ul class="nav nav-pills mb-3" id="documentTabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="resumeTab" data-toggle="pill" href="#resumes">Resumes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contractsTab" data-toggle="pill" href="#contracts">Contracts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="certificatesTab" data-toggle="pill" href="#certificates">Certificates</a>
+                                </li>
+                            </ul>
 
-        .upload-section h5 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #444;
-            margin-bottom: 15px;
-        }
+                            <!-- Tab Content Section -->
+                            <div class="tab-content" id="documentContent">
+                                <div class="tab-pane fade show active" id="resumes">
+                                    <!-- Resumes -->
+                                    <div class="row" id="resumeCards">
+                                        <!-- Dynamic Document Cards -->
+                                    </div>
+                                </div>
 
-        .upload-section label {
-            font-weight: 500;
-            color: #555;
-            margin-top: 10px;
-        }
+                                <div class="tab-pane fade" id="contracts">
+                                    <!-- Contracts -->
+                                    <div class="row" id="contractCards">
+                                        <!-- Dynamic Document Cards -->
+                                    </div>
+                                </div>
 
-        .upload-section input, .upload-section select {
-            border-radius: 12px;
-            padding: 10px;
-            width: 100%;
-            border: 1px solid #ddd;
-            transition: border-color 0.3s ease;
-        }
+                                <div class="tab-pane fade" id="certificates">
+                                    <!-- Certificates -->
+                                    <div class="row" id="certificateCards">
+                                        <!-- Dynamic Document Cards -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        .upload-section input:focus, .upload-section select:focus {
-            border-color: #007bff;
-            outline: none;
-        }
+                    </div>
+                </div>
 
-        .upload-btn {
-            background-color: #007bff;
-            color: #fff;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s;
-            border: none;
-        }
-
-        .upload-btn:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        /* Document List */
-        .document-list {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .document-list h5 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        /* Document Card */
-        .document-list .card {
-            border: none;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            transition: box-shadow 0.3s, transform 0.2s;
-        }
-
-        .document-list .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            transform: scale(1.02);
-        }
-
-        .document-list .card-header {
-            background-color: #f1f3f5;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #444;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .document-list .card-header .document-type {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        /* Document Type Colors */
-        .document-type-contract {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .document-type-certificate {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .document-type-review {
-            background-color: #ffc107;
-            color: #fff;
-        }
-
-        .document-list .card-body {
-            padding: 20px;
-            font-size: 0.95rem;
-            color: #333;
-        }
-
-        /* Document Actions */
-        .document-actions {
-            margin-top: 15px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .document-actions .btn {
-            font-size: 0.85rem;
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin-left: 10px;
-            transition: background-color 0.3s ease, transform 0.2s;
-        }
-
-        .btn-download {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .btn-download:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-
-        .btn-delete:hover {
-            background-color: #c82333;
-            transform: scale(1.05);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .search-bar {
-                flex-direction: column;
-            }
-            .search-bar button {
-                margin-top: 10px;
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">    
-
-    <!-- Search Bar -->
-    <div class="search-bar">
-        <input type="text" class="form-control" placeholder="Search documents...">
-        <button class="btn">Search</button>
-    </div>
-
-    <!-- Upload Section -->
-    <div class="upload-section">
-        <h5>Upload Document</h5>
-        <form id="uploadForm">
-            <div class="form-group mb-3">
-                <label for="docType">Document Type</label>
-                <select class="form-control" id="docType" required>
-                    <option value="">Select Type</option>
-                    <option value="Contract">Contract</option>
-                    <option value="Certificate">Certificate</option>
-                    <option value="Performance Review">Performance Review</option>
-                </select>
-            </div>
-            <div class="form-group mb-3">
-                <label for="employeeName">Employee Name</label>
-                <input type="text" class="form-control" id="employeeName" placeholder="Enter employee name" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="fileUpload">Select File</label>
-                <input type="file" class="form-control" id="fileUpload" required>
-            </div>
-            <button type="submit" class="upload-btn">Upload Document</button>
-        </form>
-    </div>
-
-    <!-- Document List -->
-    <div class="document-list">
-        <h5>Document Library</h5>
-        
-        <!-- Example Document Entry -->
-        <div class="card">
-            <div class="card-header">
-                <span>Contract - John Doe</span>
-                <span class="document-type document-type-contract">Contract</span>
-                <span class="float-right">Uploaded on: 2023-10-12</span>
-            </div>
-            <div class="card-body">
-                <p><strong>Document Type:</strong> Contract</p>
-                <p><strong>Employee Name:</strong> John Doe</p>
-                <div class="document-actions">
-                    <button class="btn btn-download"><i class="fas fa-download"></i> Download</button>
-                    <button class="btn btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
+                <!-- Modal for Uploading Documents -->
+                <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="uploadModalLabel">Upload Document</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="documentTitle">Document Title</label>
+                                        <input type="text" class="form-control" id="documentTitle" name="documentTitle" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="documentFile">Upload File</label>
+                                        <input type="file" class="form-control-file" id="documentFile" name="documentFile" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap and jQuery JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-{%endblock%}
+    <!-- JavaScript to Simulate Document Display -->
+    <script>
+        // Simulated Document Data
+        const documents = {
+            resumes: [
+                { title: 'Resume of John Doe', updated: '2024-01-15' },
+                { title: 'Resume of Jane Smith', updated: '2024-02-22' },
+                { title: 'Resume of Alice Johnson', updated: '2024-03-10' },
+                { title: 'Resume of Bob Brown', updated: '2024-04-05' }
+            ],
+            contracts: [
+                { title: 'Contract for John Doe', updated: '2024-03-01' },
+                { title: 'Contract for Alice Johnson', updated: '2024-04-10' }
+            ],
+            certificates: [
+                { title: 'Certificate for John Doe', updated: '2023-11-30' },
+                { title: 'Certificate for Jane Smith', updated: '2024-05-20' },
+                { title: 'Certificate for Alice Johnson', updated: '2024-06-11' }
+            ]
+        };
+
+        // Event listener for the search button
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            document.getElementById('documentSection').style.display = 'block';
+            const selectedEmployee = document.getElementById('employeeSelect').value;
+            const selectedDepartment = document.getElementById('departmentSelect').value;
+
+            // Update employee name (just for simulation purposes)
+            document.getElementById('employeeName').innerText = selectedEmployee ? selectedEmployee : 'John Doe';
+
+            // Clear previous cards
+            document.getElementById('resumeCards').innerHTML = '';
+            document.getElementById('contractCards').innerHTML = '';
+            document.getElementById('certificateCards').innerHTML = '';
+
+            // Generate cards for resumes, contracts, and certificates
+            generateDocumentCards('resumes');
+            generateDocumentCards('contracts');
+            generateDocumentCards('certificates');
+        });
+
+        function generateDocumentCards(type) {
+            const container = document.getElementById(type + 'Cards');
+            const docs = documents[type];
+
+            docs.forEach(doc => {
+                const card = document.createElement('div');
+                card.className = 'col-md-4 mb-3';
+
+                card.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${doc.title}</h5>
+                            <p class="card-text">Last updated: ${doc.updated}</p>
+                            <a href="#" class="btn btn-primary btn-sm">View</a>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+    </script>
+
+{% endblock %}
