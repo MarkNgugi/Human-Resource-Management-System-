@@ -1,41 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Report</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f7f7f7;
+            color: #2c3e50;
         }
-
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-
+        .header p {
+            font-size: 16px;
+            color: #7f8c8d;
+        }
         .section {
             margin-bottom: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-
         .section h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+            margin: 0;
+            padding: 16px;
+            background-color: #2c3e50;
+            color: white;
+            font-size: 22px;
         }
-
-        .section p {
-            font-size: 1rem;
+        .card {
+            padding: 20px;
+            background: #fff;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card label {
+            font-weight: bold;
+            color: #34495e;
+        }
+        .card span {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .card strong {
+            display: block;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-top: 5px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .data-item {
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .data-item label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .data-item span {
+            color: #7f8c8d;
+        }
+        p {
+            padding: 10px 20px;
+            background: #f2f2f2;
+            border-radius: 5px;
+            color: #7f8c8d;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>Custom Report</h1>
-        <p>Date: {{ filters.date_range }}</p>
+        <p><strong>Report Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
     </div>
 
-    {% for metric in metrics %}
+    {% if "demographics" in metrics %}
     <div class="section">
-        <h2>{{ metric|title }}</h2>
-        <p>Data for {{ metric }} goes here.</p>
+        <h2>Employee Demographics</h2>
+        <div class="grid-container">
+            <div class="card">
+                <label>Name:</label>
+                <strong>{{ report_data.demographics.name }}</strong>
+            </div>
+            <div class="card">
+                <label>Gender:</label>
+                <strong>{{ report_data.demographics.gender }}</strong>
+            </div>
+            <div class="card">
+                <label>Department:</label>
+                <strong>{{ report_data.demographics.department|default:"N/A" }}</strong>
+            </div>
+            <div class="card">
+                <label>Position:</label>
+                <strong>{{ report_data.demographics.position|default:"N/A" }}</strong>
+            </div>
+            <div class="card">
+                <label>Start Date:</label>
+                <strong>{{ report_data.demographics.start_date|date:"Y-m-d" }}</strong>
+            </div>
+        </div>
     </div>
-    {% endfor %}
+    {% endif %}
+
+    {% if "attendance" in metrics %}
+    <div class="section">
+        <h2>Attendance Records</h2>
+        {% if report_data.attendance %}
+            <div class="grid-container">
+            {% for record in report_data.attendance %}
+            <div class="data-item">
+                <span><label>Date:</label> {{ record.date|date:"Y-m-d" }}</span>
+                <span><label>Status:</label> {{ record.attendance_status|yesno:"Present,Absent" }}</span>
+                <span><label>Check-in:</label> {{ record.check_in_time|time:"H:i" }}</span>
+                <span><label>Check-out:</label> {{ record.check_out_time|time:"H:i" }}</span>
+            </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p>No attendance records available.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if "punctuality" in metrics %}
+    <div class="section">
+        <h2>Punctuality</h2>
+        {% if report_data.punctuality %}
+            <div class="grid-container">
+            {% for record in report_data.punctuality %}
+            <div class="data-item">
+                <span><label>Date:</label> {{ record.date|date:"Y-m-d" }}</span>
+                <span><label>Status:</label> {{ record.punctuality_status }}</span>
+                <span><label>Check-in Time:</label> {{ record.check_in_time|time:"H:i" }}</span>
+            </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p>No punctuality records available.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if "leave" in metrics %}
+    <div class="section">
+        <h2>Leave Patterns</h2>
+        {% if report_data.leave %}
+            <div class="grid-container">
+            {% for leave in report_data.leave %}
+            <div class="data-item">
+                <span><label>Leave Type:</label> {{ leave.leave_type }}</span>
+                <span><label>Start:</label> {{ leave.start_date|date:"Y-m-d" }}</span>
+                <span><label>End:</label> {{ leave.end_date|date:"Y-m-d" }}</span>
+                <span><label>Status:</label> {{ leave.status }}</span>
+            </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p>No leave records available.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Repeat for other metrics like 'turnover', 'demographics', etc. -->
+
 </body>
 </html>

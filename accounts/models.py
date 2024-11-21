@@ -4,7 +4,9 @@ from django.db import models
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=100,default='ADMIN')
+    name = models.CharField(max_length=100, default='ADMIN')
+    work_start_time = models.TimeField(null=True, blank=True) 
+    work_end_time = models.TimeField(null=True, blank=True)  
 
     def __str__(self):
         return self.name

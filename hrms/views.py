@@ -9,6 +9,8 @@ from accounts.models import *
 from .forms import LeaveRequestForm
 from .models import *
 from datetime import date
+from datetime import datetime, timedelta
+from django.db.models import Count, F
 from weasyprint import HTML
 import json
 
@@ -128,40 +130,77 @@ def report_builder(request):
 
     if request.method == "POST":
         # Gather form data
-        employee = request.POST.get("employee")
+        employee_id = request.POST.get("employee")
         department = request.POST.get("department")
-        job_role = request.POST.get("jobRole")
-        date_range = request.POST.get("date_range")
+        job_role = request.POST.get("jobRole")        
         metrics = request.POST.getlist("metrics")
+        date_from = request.POST.get("date_from")
+        date_to = request.POST.get("date_to")
 
-        # Generate Report Data
-        report_name = f"Report_{date.today().strftime('%Y-%m-%d')}"
-        filters_used = {
-            "employee": employee,
-            "department": department,
-            "job_role": job_role,
-            "date_range": date_range,
-        }
-        report = GeneratedReport.objects.create(
-            report_name=report_name,
-            metrics_selected=metrics,
-            filters_used=filters_used,
-        )
+        # Parse the date range
+        try:
+            start_date = datetime.strptime(date_from, "%Y-%m-%d")
+            end_date = datetime.strptime(date_to, "%Y-%m-%d")
+        except ValueError:
+            # Handle invalid date format, possibly show an error
+            start_date = end_date = None
+
+        # Filter employees if selected
+        selected_employee = None
+        if employee_id:
+            selected_employee = CustomUser.objects.get(id=employee_id)
+
+        # Query data for the selected metrics
+        report_data = {}
+
+        # Employee Demographics
+        if "demographics" in metrics and selected_employee:
+            report_data["demographics"] = {
+                "name": f"{selected_employee.first_name} {selected_employee.last_name}",
+                "gender": selected_employee.gender,
+                "department": selected_employee.department.name if selected_employee.department else "N/A",
+                "position": selected_employee.position or "N/A",
+                "start_date": selected_employee.start_date or "N/A",
+            }
+
+        # Attendance Data (filtered by date range)
+        if "attendance" in metrics and selected_employee:
+            attendance = AttendanceRecord.objects.filter(employee=selected_employee, date__range=[start_date, end_date])
+            report_data["attendance"] = attendance
+
+        # Leave Patterns (filtered by date range)
+        if "leave" in metrics and selected_employee:
+            leave_requests = LeaveRequest.objects.filter(employee=selected_employee, start_date__range=[start_date, end_date])
+            report_data["leave"] = leave_requests
+
+        # Turnover (filtered by department and exit date)
+        if "turnover" in metrics and department:
+            turnover = CustomUser.objects.filter(department__name=department, exit_date__range=[start_date, end_date]).count()
+            report_data["turnover"] = turnover
 
         # Generate PDF
         html_template = "hrms/admin/reports/pdf_template.html"
         pdf_content = render(request, html_template, {
             "metrics": metrics,
-            "filters": filters_used,
+            "report_data": report_data,
         }).content
+        report_name = f"Report_{datetime.today().strftime('%Y-%m-%d')}"
         pdf_file_path = f"reports/{report_name}.pdf"
         HTML(string=pdf_content).write_pdf(pdf_file_path)
-        report.pdf_file = pdf_file_path
-        report.save()
 
-        return redirect("report_list")  
+        # Save the generated report to the database
+        report = GeneratedReport.objects.create(
+            report_name=report_name,
+            metrics_selected=metrics,
+            filters_used={"employee": employee_id, "department": department, "job_role": job_role, "date_from": date_from, "date_to": date_to},
+            pdf_file=pdf_file_path,
+        )
+
+        return redirect("report_list")
 
     return render(request, 'hrms/admin/reports/report-builder.html', {'employees': employees})
+
+
 
 def report_list(request):
     reports = GeneratedReport.objects.all()

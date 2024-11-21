@@ -1,7 +1,7 @@
 {% extends 'hrms/admin/base.html' %}
 {% load custom_filters %}
 
-
+ 
 {% block content %}
 
     <style>
@@ -117,6 +117,86 @@
             .header {
                 font-size: 1.6rem;
             }
+
+            .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-check-inline {
+    display: inline-flex; /* Align radio button and label inline */
+    align-items: center; /* Vertically center-align items */
+    margin-right: 1rem; /* Add spacing between options */
+}
+
+.form-check-input {
+    margin: 0; /* Remove default margins */
+    vertical-align: middle; /* Align with the middle of the label */
+    margin-right: 0.5rem; /* Add spacing between the button and label */
+}
+
+.form-check-label {
+    margin: 0; /* Remove any unnecessary margins */
+    line-height: 1; /* Ensure consistent line height */
+    vertical-align: middle; /* Align label text with the middle of the button */
+}
+
+.btn-group-toggle .btn {
+    margin: 0 5px;
+    border-radius: 20px; /* Rounded edges for buttons */
+    padding: 8px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-group-toggle .btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.btn-group-toggle .btn:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Container for gender toggle buttons */
+.gender-toggle-container {
+    display: flex;
+    justify-content: space-between; /* Adds space between the buttons */
+    max-width: 300px;
+    margin-top: 10px;
+}
+
+/* Styling for individual gender buttons */
+.gender-btn {
+    border-radius: 50px; /* Round borders for buttons */
+    padding: 10px 20px; /* Adjust padding for better spacing */
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    width: 48%; /* Allows buttons to sit next to each other with space */
+}
+
+.gender-btn:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.gender-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+
+
+
+
+
         }
     </style>
 
@@ -135,6 +215,23 @@
                 <label for="lastName">Last Name</label>
                 {{ form.last_name|add_class:"form-control" }}
             </div>
+
+            <div class="form-group">
+                <label class="d-block">Gender</label>
+                <div class="gender-toggle-container">
+                    {% for radio in form.gender %}
+                        <label class="btn btn-outline-primary gender-btn">
+                            {{ radio.tag }} {{ radio.choice_label }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            
+            
+            
+            
+                       
 
             <div class="form-group">
                 <label for="email">Email Address <i class="fas fa-info-circle tooltip-icon" title="Used for login and communication"></i></label>
@@ -157,7 +254,7 @@
             <div class="form-group">
                 <label for="department">Department</label>
                 {{ form.department|add_class:"form-control" }}
-            </div>
+            </div>            
 
             <div class="form-group">
                 <label for="startDate">Start Date</label>

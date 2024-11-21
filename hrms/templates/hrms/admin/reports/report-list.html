@@ -1,23 +1,101 @@
-<table>
-    <thead>
-      <tr>
-        <th>Report Name</th>
-        <th>Metrics</th>
-        <th>Filters</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
+<head>
+    <style>
+      /* Basic reset and font setup */
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+  
+      /* Main container for all reports */
+      .reports-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+        gap: 20px;
+        padding: 20px;
+        justify-content: center;
+      }
+  
+      /* Style for each report card */
+      .report-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+        padding: 20px;
+      }
+  
+      /* Card hover effect */
+      .report-card:hover {
+        transform: translateY(-10px);
+      }
+  
+      /* Header for the card */
+      .report-card-header {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+  
+      /* Styling for metrics and filters section */
+      .report-metrics, .report-filters {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 15px;
+      }
+  
+      /* Button-style link for download action */
+      .download-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+  
+      /* Button hover effect */
+      .download-btn:hover {
+        background-color: #45a049;
+      }
+  
+      /* For smaller screens */
+      @media (max-width: 768px) {
+        .report-card {
+          padding: 15px;
+        }
+  
+        .report-card-header {
+          font-size: 16px;
+        }
+  
+        .download-btn {
+          font-size: 12px;
+          padding: 6px 12px;
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="reports-container">
       {% for report in reports %}
-      <tr>
-        <td>{{ report.report_name }}</td>
-        <td>{{ report.metrics_selected }}</td>
-        <td>{{ report.filters_used }}</td>
-        <td>
-          <a href="{% url 'export_report_pdf' report.id %}">Download PDF</a>
-        </td>
-      </tr>
+      <div class="report-card">
+        <div class="report-card-header">{{ report.report_name }}</div>
+        <div class="report-metrics">
+          <strong>Metrics:</strong> {{ report.metrics_selected }}
+        </div>
+        <div class="report-filters">
+          <strong>Filters Used:</strong> {{ report.filters_used }}
+        </div>
+        <a href="{% url 'export_report_pdf' report.id %}" class="download-btn">Download PDF</a>
+      </div>
       {% endfor %}
-    </tbody>
-  </table>
+    </div>
+  </body>
   
