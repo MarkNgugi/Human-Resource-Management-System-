@@ -141,15 +141,27 @@ def departments(request):
     context = {'departments':departments}
     return render(request,'hrms/admin/attendance-management/departments.html',context)
  
-def dep_attendance(requestdep,id):  
+def dep_attendance(request, id):  
     department = Department.objects.get(id=id)  
     attendance_records = AttendanceRecord.objects.filter(employee__department=department)
 
+    total_employees = department.customuser_set.count()
+    present_today = attendance_records.filter(attendance_status='present').count()
+    absent_today = attendance_records.filter(attendance_status='absent').count()
+    late_entries = attendance_records.filter(is_late=True).count()
+    on_leave_today = attendance_records.filter(attendance_status='on_leave').count()
+
     context = {
-        'department':department,
-        'attendance_records':attendance_records
-        }
-    return render(requestdep, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/attendance-management/department_attendance.html',context)
+        'department': department,
+        'attendance_records': attendance_records,
+        'total_employees': total_employees,
+        'present_today': present_today,
+        'absent_today': absent_today,
+        'late_entries': late_entries,
+        'on_leave_today': on_leave_today,
+    }
+    return render(request, 'hrms/admin/attendance-management/department_attendance.html', context)
+
 
 def attendance_reports(request):
     context={}
@@ -297,9 +309,6 @@ def system_config(request):
     context = {}
     return render(request,'hrms/admin/settings/system-config.html',context)
 
-def roles_and_permissions(request):
-    context={}
-    return render(request,'hrms/admin/settings/roles-and-permissions.html',context)
 
 def notification_settings(request):
     context = {}

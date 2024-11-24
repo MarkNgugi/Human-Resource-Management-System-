@@ -16,16 +16,21 @@ class Document(models.Model):
     def __str__(self):
         return self.title
 
+
 class AttendanceRecord(models.Model):
     employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateField()
     check_in_time = models.DateTimeField(null=True, blank=True)
     check_out_time = models.DateTimeField(null=True, blank=True)
-    attendance_status = models.CharField(max_length=20, choices=[('present', 'Present'), ('absent', 'Absent'), ('on_leave', 'On Leave')])
-    source = models.CharField(max_length=50, choices=[('biometric', 'Biometric'), ('web', 'Web Login')])
+    attendance_status = models.CharField(max_length=20, choices=[
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+        ('on_leave', 'On Leave')
+    ], blank=True, null=True)  
     is_late = models.BooleanField(default=False)
     late_duration = models.DurationField(null=True, blank=True)
     is_on_time = models.BooleanField(default=False)
+    remarks = models.CharField(max_length=255, blank=True, null=True)  
     created_at = models.DateField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -39,15 +44,36 @@ class AttendanceRecord(models.Model):
             on_time_limit = department_start_time + timedelta(minutes=department.late_checkin_buffer)
 
             if self.check_in_time <= on_time_limit:  # On time
+                self.attendance_status = 'present'
                 self.is_on_time = True
                 self.is_late = False
                 self.late_duration = timedelta(0)
+                self.remarks = 'On time'
             elif self.check_in_time > on_time_limit:  # Late
+                self.attendance_status = 'present'
                 self.is_on_time = False
                 self.is_late = True
                 self.late_duration = self.check_in_time - department_start_time
+                self.remarks = 'Late'
+
+        # Check if the user applied for leave on this date
+        leave_request = LeaveRequest.objects.filter(
+            employee=self.employee,
+            start_date__lte=self.date,
+            end_date__gte=self.date,
+            status='APPROVED'
+        ).first()
+        if leave_request:
+            self.attendance_status = 'on_leave'
+            self.remarks = 'On leave'
+
+        # If there are no checks for presence or leave, mark as absent
+        if not self.attendance_status:
+            self.attendance_status = 'absent'
+            self.remarks = 'Absent'
 
         super().save(*args, **kwargs)
+
 
 
 

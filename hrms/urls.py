@@ -34,8 +34,7 @@ urlpatterns = [
     path('hr-dash/',report_builder,name='hrdash'),
 
 
-    path('system-config/',system_config,name='systemconfig'),
-    path('roles-and-permissions/',roles_and_permissions,name='rolesandpermissions'),
+    path('system-config/',system_config,name='systemconfig'),    
     path('notification-settings/',notification_settings,name='notificationsettings'),
 
 

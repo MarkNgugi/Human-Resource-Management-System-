@@ -17,6 +17,7 @@
                     <!-- Available Documents Section -->
                     <div class="mt-4">
                         <h5>Available Documents</h5>
+                        {% if documents %}
                         <div class="row">
                             {% for document in documents %}
                             <div class="col-md-4 mb-3">
@@ -24,17 +25,25 @@
                                     <div class="card-body">
                                         <h6 class="card-title">{{ document.title }}</h6>
                                         <p class="card-text">{{ document.description }}</p>
-                                        
+
+                                        <!-- Check if document has a file associated with it -->
+                                        {% if document.file %}
                                         <!-- View Document Button: Opens document in a new tab -->
                                         <a href="{{ document.file.url }}" target="_blank" class="btn btn-info btn-sm">View Document</a>
-                                        
+
                                         <!-- Download Document Button: Downloads the document -->
                                         <a href="{{ document.file.url }}" download class="btn btn-success btn-sm">Download Document</a>
+                                        {% else %}
+                                        <p class="text-muted">No file available for this document.</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
+                        {% else %}
+                            <p>No documents available for this employee.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
