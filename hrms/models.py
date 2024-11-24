@@ -13,24 +13,28 @@ class AttendanceRecord(models.Model):
     source = models.CharField(max_length=50, choices=[('biometric', 'Biometric'), ('web', 'Web Login')])
     is_late = models.BooleanField(default=False)
     late_duration = models.DurationField(null=True, blank=True)
-    created_at = models.DateField(null=True, blank=True)
-
-    def get_lateness(self):
-        if self.is_late:
-            return self.late_duration
-        return timedelta(0)
+    is_on_time = models.BooleanField(default=False)
+    created_at = models.DateField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        # Check if the employee is late based on department's work start time
         department = self.employee.department
         if department and self.check_in_time:
-            department_start_time = timezone.make_aware(department.work_start_time)
-            if self.check_in_time > department_start_time:
-                self.is_late = True
-                self.late_duration = self.check_in_time - department_start_time
-            else:
+            # Get the department's work start time
+            department_start_time = timezone.make_aware(
+                timezone.datetime.combine(self.date, department.work_start_time)
+            )
+            # Calculate the buffer time
+            on_time_limit = department_start_time + timedelta(minutes=department.late_checkin_buffer)
+
+            if self.check_in_time <= on_time_limit:  # On time
+                self.is_on_time = True
                 self.is_late = False
                 self.late_duration = timedelta(0)
+            elif self.check_in_time > on_time_limit:  # Late
+                self.is_on_time = False
+                self.is_late = True
+                self.late_duration = self.check_in_time - department_start_time
+
         super().save(*args, **kwargs)
 
 
