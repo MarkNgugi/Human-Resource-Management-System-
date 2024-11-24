@@ -6,20 +6,35 @@
         <div class="col-12">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white">
-                    <h4>Manage Documents for {{ selected_employee.first_name }} {{ selected_employee.last_name }}</h4>
+                    <h4>Manage Documents for {{ employee.first_name }} {{ employee.last_name }}</h4>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
+                    <!-- Add Document Button -->
+                    <div class="mb-3">
+                        <a href="{% url 'add_document' employee.id %}" class="btn btn-success">Add Document</a>
+                    </div>
+
+                    <!-- Available Documents Section -->
                     <div class="mt-4">
                         <h5>Available Documents</h5>
-                        <ul>
-                            {% for document in mock_documents %}
-                                <li>
-                                    <h6>{{ document.title }}</h6>
-                                    <p>{{ document.description }}</p>
-                                    <a href="#" class="btn btn-info">View Document</a>
-                                </li>
+                        <div class="row">
+                            {% for document in documents %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ document.title }}</h6>
+                                        <p class="card-text">{{ document.description }}</p>
+                                        
+                                        <!-- View Document Button: Opens document in a new tab -->
+                                        <a href="{{ document.file.url }}" target="_blank" class="btn btn-info btn-sm">View Document</a>
+                                        
+                                        <!-- Download Document Button: Downloads the document -->
+                                        <a href="{{ document.file.url }}" download class="btn btn-success btn-sm">Download Document</a>
+                                    </div>
+                                </div>
+                            </div>
                             {% endfor %}
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>

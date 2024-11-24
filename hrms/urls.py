@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from .views import *
 
@@ -11,6 +13,7 @@ urlpatterns = [
     path('add_employee/', add_employee, name='addemployee'),
     path('document_management/',document_management,name='documentmanagement'),
     path('documents/<int:employee_id>/manage/', manage_documents, name='manage_documents'),
+    path('documents/<int:employee_id>/add/', add_document, name='add_document'),
 
     path('offboarding/',offboarding,name='offboarding'),
 
@@ -51,4 +54,4 @@ urlpatterns = [
 
 
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

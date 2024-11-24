@@ -6,7 +6,7 @@ from accounts.forms import EmployeeCreationForm
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password
 from accounts.models import *
-from .forms import LeaveRequestForm
+from .forms import *
 from .models import *
 from datetime import date
 from datetime import datetime, timedelta
@@ -96,22 +96,36 @@ def document_management(request):
     }
     return render(request, 'hrms/admin/employee-management/document_management.html', context)
 
-def manage_documents(request, employee_id):
-    # Fetch the employee based on the employee_id
-    selected_employee = get_object_or_404(CustomUser, id=employee_id)
 
-    # You can mock up document data here (for now, a simple list of documents)
-    mock_documents = [
-        {"title": "Document 1", "description": "This is a description of Document 1"},
-        {"title": "Document 2", "description": "This is a description of Document 2"},
-        {"title": "Document 3", "description": "This is a description of Document 3"},
-    ]
-
+def manage_documents(request, employee_id):    
+    employee = get_object_or_404(CustomUser, id=employee_id)
+    
+    documents = Document.objects.filter(employee=employee)
+    
     context = {
-        'selected_employee': selected_employee,
-        'mock_documents': mock_documents,
+        'employee': employee,
+        'documents': documents,
     }
+    
     return render(request, 'hrms/admin/employee-management/manage_documents.html', context)
+
+
+
+
+def add_document(request, employee_id):
+    employee = get_object_or_404(CustomUser, id=employee_id)
+    
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            document = form.save(commit=False)
+            document.employee = employee  # Associate the document with the selected employee
+            document.save()
+            return redirect('manage_documents', employee_id=employee.id)  # Redirect to manage documents page
+    else:
+        form = DocumentForm()
+
+    return render(request, 'hrms/admin/employee-management/add_document.html', {'form': form, 'employee': employee})
 
 
 def offboarding(request):
