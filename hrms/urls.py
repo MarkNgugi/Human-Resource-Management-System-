@@ -10,6 +10,8 @@ urlpatterns = [
     path('employee-profile/',employee_profile,name = 'employeeprofile'),
     path('add_employee/', add_employee, name='addemployee'),
     path('document_management/',document_management,name='documentmanagement'),
+    path('documents/<int:employee_id>/manage/', manage_documents, name='manage_documents'),
+
     path('offboarding/',offboarding,name='offboarding'),
 
     path('attendance/department',departments,name='departments'),

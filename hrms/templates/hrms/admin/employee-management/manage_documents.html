@@ -1,0 +1,29 @@
+{% extends 'hrms/admin/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4>Manage Documents for {{ selected_employee.first_name }} {{ selected_employee.last_name }}</h4>
+                </div>
+                <div class="card-body">                    
+                    <div class="mt-4">
+                        <h5>Available Documents</h5>
+                        <ul>
+                            {% for document in mock_documents %}
+                                <li>
+                                    <h6>{{ document.title }}</h6>
+                                    <p>{{ document.description }}</p>
+                                    <a href="#" class="btn btn-info">View Document</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

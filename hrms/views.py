@@ -67,9 +67,52 @@ def add_employee(request):
     return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/employee-management/add_emloyee.html', {'form': form})
 
 
+
 def document_management(request):
-    context={}
-    return render(request,'hrms/admin/employee-management/document_management.html',context)
+    employees = CustomUser.objects.all()
+    departments = Department.objects.exclude(name__iexact='admin')  # Exclude 'Admin' department
+    selected_employee = None
+    error_message = None
+
+    # Handle search functionality
+    if request.method == 'GET' and 'employee' in request.GET and 'department' in request.GET:
+        employee_id = request.GET.get('employee', '')
+        department_name = request.GET.get('department', '')
+
+        # Filter the employee based on the selected employee and department
+        try:
+            if employee_id and department_name:
+                selected_employee = CustomUser.objects.get(id=employee_id, department__name=department_name)
+            else:
+                error_message = "Please select both an employee and a department."
+        except CustomUser.DoesNotExist:
+            error_message = "User not found."
+
+    context = {
+        'employees': employees,
+        'departments': departments,
+        'selected_employee': selected_employee,
+        'error_message': error_message,
+    }
+    return render(request, 'hrms/admin/employee-management/document_management.html', context)
+
+def manage_documents(request, employee_id):
+    # Fetch the employee based on the employee_id
+    selected_employee = get_object_or_404(CustomUser, id=employee_id)
+
+    # You can mock up document data here (for now, a simple list of documents)
+    mock_documents = [
+        {"title": "Document 1", "description": "This is a description of Document 1"},
+        {"title": "Document 2", "description": "This is a description of Document 2"},
+        {"title": "Document 3", "description": "This is a description of Document 3"},
+    ]
+
+    context = {
+        'selected_employee': selected_employee,
+        'mock_documents': mock_documents,
+    }
+    return render(request, 'hrms/admin/employee-management/manage_documents.html', context)
+
 
 def offboarding(request):
     context={}
