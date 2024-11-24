@@ -38,9 +38,17 @@ def admin_dashboard(request):
  
 # ============================EMPLOYEE MANAGEMENT START============================
 def employee_profile(request):
-    employees = CustomUser.objects.filter(role__in=['employee','hr_manager'])
-    context = {'employees':employees}
-    return render(request,'hrms/admin/employee-management/employee_profile.html',context)
+    query = request.GET.get('q', '')  # Get the search query from the request
+    employees = CustomUser.objects.filter(role__in=['employee', 'hr_manager'])
+    
+    if query:
+        employees = employees.filter(
+            models.Q(first_name__icontains=query) | models.Q(last_name__icontains=query)
+        )
+    
+    context = {'employees': employees}
+    return render(request, 'hrms/admin/employee-management/employee_profile.html', context)
+
 
 @login_required
 def add_employee(request):

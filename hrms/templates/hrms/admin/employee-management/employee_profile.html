@@ -97,8 +97,11 @@
             <h2 class="text-center">Employee Records</h2>
 
             <div class="search-bar text-center">
-                <input type="text" id="searchInput" placeholder="Search for employees..." class="form-control w-50 mx-auto">
+                <form method="get">
+                    <input type="text" name="q" id="searchInput" placeholder="Search for employees..." class="form-control w-50 mx-auto" value="{{ request.GET.q|default:'' }}">
+                </form>
             </div>
+            
 
             <!-- Employee Cards in a Single Row -->
             <div class="row justify-content-center">
@@ -122,20 +125,20 @@
     </div>
 
     <script>
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            var input = this.value.toLowerCase();
-            var cards = document.querySelectorAll('.employee-card');
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            const input = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.employee-card');
 
-            cards.forEach(function(card) {
-                var title = card.querySelector('.card-title').innerText.toLowerCase();
-                var position = card.querySelector('.card-text').innerText.toLowerCase();
-                if (title.includes(input) || position.includes(input)) {
+            cards.forEach(function (card) {
+                const name = card.querySelector('.card-title').innerText.toLowerCase();
+                if (name.includes(input)) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
                 }
             });
         });
+
     </script>
 </body>
 
