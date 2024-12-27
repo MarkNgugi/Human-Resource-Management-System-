@@ -1,34 +1,139 @@
 {% extends 'hrms/admin/base.html' %}
 
 {% block content %}
-<div class="container">
-    <h2>Leave Applications</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Employee</th>
-                <th>Leave Type</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for leave in leave_requests %}
-            <tr>
-                <td>{{ leave.employee.username }}</td>
-                <td>{{ leave.leave_type }}</td>
-                <td>{{ leave.start_date }}</td>
-                <td>{{ leave.end_date }}</td>
-                <td>{{ leave.get_status_display }}</td>
-                <td>
-                    <a href="{% url 'update_leave_status' leave.id 'APPROVED' %}" class="btn btn-sm btn-success">Approve</a>
-                    <a href="{% url 'update_leave_status' leave.id 'DECLINED' %}" class="btn btn-sm btn-danger">Decline</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Leave Applications</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leave_requests %}
+                    <tr>
+                        <td>{{ leave.employee.username }}</td>
+                        <td>{{ leave.leave_type }}</td>
+                        <td>{{ leave.start_date }}</td>
+                        <td>{{ leave.end_date }}</td>
+                        <td>
+                            <span class="badge {% if leave.get_status_display == 'Approved' %}badge-success{% elif leave.get_status_display == 'Declined' %}badge-danger{% else %}badge-secondary{% endif %}">
+                                {{ leave.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'update_leave_status' leave.id 'APPROVED' %}" class="btn btn-sm btn-success">
+                                <i class="fas fa-check-circle"></i> Approve
+                            </a>
+                            <a href="{% url 'update_leave_status' leave.id 'DECLINED' %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-times-circle"></i> Decline
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* General Page Styling */
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #f0f3f7, #d9e3ea);
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    /* Table Styling */
+    .table {
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    .table thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #dee2e6;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* Badge Styling */
+    .badge {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        border-radius: 12px;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+    }
+
+    /* Button Styling */
+    .btn {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+
+    /* Responsive Styling */
+    @media (max-width: 768px) {
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .table thead {
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            font-size: 0.8rem;
+        }
+    }
+</style>
 {% endblock %}

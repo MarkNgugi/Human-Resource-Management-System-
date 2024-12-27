@@ -11,18 +11,29 @@
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        
+                        <!-- Title Input -->
                         <div class="form-group">
                             <label for="title">Title</label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
+                        
+                        <!-- Description Input -->
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                         </div>
+                        
+                        <!-- Custom File Input -->
                         <div class="form-group">
                             <label for="file">Document File</label>
-                            <input type="file" class="form-control-file" id="file" name="file">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="file" name="file" required>
+                                <label class="custom-file-label" for="file">Choose file...</label>
+                            </div>
                         </div>
+                        
+                        <!-- Submit Button -->
                         <button type="submit" class="btn btn-success">Upload Document</button>
                     </form>
                 </div>
@@ -30,4 +41,44 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom file input button styling */
+    .custom-file-input:lang(en) ~ .custom-file-label::after {
+        content: "Browse...";
+    }
+
+    .custom-file-label {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 38px;
+        padding: 10px 15px;
+        font-size: 1rem;
+        color: #495057;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .custom-file-input:focus ~ .custom-file-label {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .25);
+    }
+
+    /* Hover effect for file input */
+    .custom-file-label:hover {
+        background-color: #e2e6ea;
+    }
+    
+    /* Focus effect */
+    .custom-file-input:focus ~ .custom-file-label {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .25);
+    }
+</style>
 {% endblock %}

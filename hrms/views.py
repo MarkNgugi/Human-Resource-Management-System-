@@ -164,7 +164,7 @@ def dep_attendance(request, id):
 
 def attendance_reports(request):
     context={}
-    return render(request,'/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/attendance-management/attendance-reports.html',context)
+    return render(request,'hrms/admin/attendance-management/attendance-reports.html',context)
 
 # ============================ATTENDANCE MANAGEMENT END==============================
 
@@ -349,7 +349,8 @@ def employee_dashboard(request):
 def my_profile(request, id):
     employee_details = get_object_or_404(CustomUser, id=id)
     context = {'employee_details': employee_details}
-    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/employee/profile/profile.html', context)
+    return render(request, 'hrms/employee/profile/profile.html', context)
+
 
 # ============================MY PROFILE END===========================================
 
@@ -360,7 +361,7 @@ def my_profile(request, id):
 @login_required
 def employee_leave_status(request):
     leave_requests = LeaveRequest.objects.filter(employee=request.user)
-    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/employee/leave-management/leave-status.html', {'leave_requests': leave_requests})
+    return render(request, 'hrms/employee/leave-management/leave-status.html', {'leave_requests': leave_requests})
 
 
 @login_required
@@ -374,7 +375,7 @@ def apply_leave(request):
             return redirect('employeeleavestatus')  
     else:
         form = LeaveRequestForm()
-    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/employee/leave-management/apply-leave.html', {'form': form})
+    return render(request, 'hrms/employee/leave-management/apply-leave.html', {'form': form})
 
 # ============================LEAVE MANAGEMENT END===========================================
 
