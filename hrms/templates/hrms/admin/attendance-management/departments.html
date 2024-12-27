@@ -209,33 +209,38 @@
         {% endfor %}
     </div>
 
-    <!-- Modal -->
-    <div class="modal" id="add-department-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add Department</h2>
-                <button class="modal-close" id="close-modal-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'departments' %}">
-                    {% csrf_token %}
-                    <div>
-                        <label for="name">Department Name:</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div>
-                        <label for="work_start_time">Work Start Time:</label>
-                        <input type="time" id="work_start_time" name="work_start_time">
-                    </div>
-                    <div>
-                        <label for="late_checkin_buffer">Late Check-in Buffer (Minutes):</label>
-                        <input type="number" id="late_checkin_buffer" name="late_checkin_buffer" value="10" min="1">
-                    </div>
-                    <button type="submit" class="btn-submit">Add Department</button>
-                </form>
-            </div>
+<!-- Modal -->
+<div class="modal" id="add-department-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Department</h2>
+            <button class="modal-close" id="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'departments' %}">
+                {% csrf_token %}
+                <div>
+                    <label for="name">Department Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="work_start_time">Work Start Time:</label>
+                    <input type="time" id="work_start_time" name="work_start_time">
+                </div>
+                <div>
+                    <label for="work_end_time">Work End Time:</label>
+                    <input type="time" id="work_end_time" name="work_end_time">
+                </div>
+                <div>
+                    <label for="late_checkin_buffer">Late Check-in Buffer (Minutes):</label>
+                    <input type="number" id="late_checkin_buffer" name="late_checkin_buffer" value="10" min="1">
+                </div>
+                <button type="submit" class="btn-submit">Add Department</button>
+            </form>
         </div>
     </div>
+</div>
+
 </div>
 
 <script>

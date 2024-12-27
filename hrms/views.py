@@ -158,19 +158,19 @@ def dep_attendance(request, id):
     attendance_records = AttendanceRecord.objects.filter(employee__department=department)
 
     total_employees = department.customuser_set.count()
-    present_today = attendance_records.filter(attendance_status='present').count()
-    absent_today = attendance_records.filter(attendance_status='absent').count()
-    late_entries = attendance_records.filter(is_late=True).count()
-    on_leave_today = attendance_records.filter(attendance_status='on_leave').count()
+    # present_today = attendance_records.filter(attendance_status='present').count()
+    # absent_today = attendance_records.filter(attendance_status='absent').count()
+    # late_entries = attendance_records.filter(is_late=True).count()
+    # on_leave_today = attendance_records.filter(attendance_status='on_leave').count()
 
     context = {
         'department': department,
         'attendance_records': attendance_records,
         'total_employees': total_employees,
-        'present_today': present_today,
-        'absent_today': absent_today,
-        'late_entries': late_entries,
-        'on_leave_today': on_leave_today,
+        # 'present_today': present_today,
+        # 'absent_today': absent_today,
+        # 'late_entries': late_entries,
+        # 'on_leave_today': on_leave_today,
     }
     return render(request, 'hrms/admin/attendance-management/department_attendance.html', context)
 
@@ -356,6 +356,92 @@ def hr_manager_dashboard(request):
 @login_required
 def employee_dashboard(request):
     return render(request, 'hrms/employee/employee_dashboard.html')
+
+
+from django.utils import timezone
+from django.shortcuts import render, redirect
+from datetime import timedelta
+from .models import AttendanceRecord
+
+def check_in_or_out(request, id):
+    # Ensure the user is logged in and is checking in or out for themselves
+    if request.user.id != id:
+        return redirect('home')  # Redirect if the user tries to access another user's page
+
+    now = timezone.now()
+
+    # Fetch today's attendance record for the user
+    today = now.date()
+    attendance_record, created = AttendanceRecord.objects.get_or_create(employee=request.user, date=today)
+
+    # Time interval restriction for testing (5 seconds)
+    interval_limit = timedelta(hours=3)
+
+    message = None
+    show_check_in = False
+    show_check_out = False
+
+    # Reset logic: Check if 5 seconds have passed since the last check-out
+    if attendance_record.check_out_time:
+        time_since_last_action = now - attendance_record.check_out_time
+        if time_since_last_action >= interval_limit:
+            attendance_record.check_in_time = None
+            attendance_record.check_out_time = None
+            attendance_record.save()
+            show_check_in = True  # Enable check-in button after reset
+        else:
+            show_check_in = False  # Prevent check-in before interval
+            show_check_out = False  # Prevent check-out
+    else:
+        # Determine button visibility
+        if not attendance_record.check_in_time and not attendance_record.check_out_time:
+            show_check_in = True  # Show check-in button
+        elif attendance_record.check_in_time and not attendance_record.check_out_time:
+            show_check_out = True  # Show check-out button
+
+    # Handle POST requests for check-in or check-out
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        # Handle check-in
+        if action == 'check_in':
+            if not attendance_record.check_in_time:
+                attendance_record.check_in_time = now
+                attendance_record.save()
+                message = "Checked in successfully."
+                show_check_out = True  # Show check-out button
+                show_check_in = False  # Hide check-in button
+            else:
+                message = "Invalid action: You are already checked in."
+
+        # Handle check-out
+        elif action == 'check_out':
+            if attendance_record.check_in_time and not attendance_record.check_out_time:
+                attendance_record.check_out_time = now
+                attendance_record.save()
+                message = "Checked out successfully."
+                show_check_out = False  # Hide check-out button
+                show_check_in = False  # Prevent immediate check-in
+           
+
+    # Context for the template
+    context = {
+        'attendance_record': attendance_record,
+        'employee_details': request.user,
+        'message': message,
+        'show_check_in': show_check_in,
+        'show_check_out': show_check_out,
+    }
+    return render(request, 'hrms/employee/checkin&out/check_in_or_out.html', context)
+
+
+
+
+
+
+
+
+
 
 # ============================MY PROFILE START===========================================
  

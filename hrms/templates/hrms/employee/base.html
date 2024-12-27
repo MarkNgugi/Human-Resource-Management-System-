@@ -239,13 +239,12 @@
             <p class="sidebar-menu-title">Dash menu</p>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.html">
-              <i class="typcn typcn-device-desktop menu-icon"></i>
-              <span class="menu-title">Dashboard <span class="badge badge-primary ml-3">New</span></span>
-              <!-- Overview of Personal Statistics (e.g., upcoming leave, total attendance days)
-              Notifications (approvals, rejections, or other updates) -->
+            <a class="nav-link" href="{% url 'check_in_or_out' user.id %}">
+                <i class="typcn typcn-device-desktop menu-icon"></i>
+                <span class="menu-title">Check in/out <span class="badge badge-primary ml-3">New</span></span>
             </a>
-          </li>
+        </li>
+        
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <i class="typcn typcn-briefcase menu-icon"></i>

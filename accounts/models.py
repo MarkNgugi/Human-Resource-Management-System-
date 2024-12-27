@@ -1,15 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.apps import apps
 
 
 class Department(models.Model):
     name = models.CharField(max_length=100, default='ADMIN')
     work_start_time = models.TimeField(null=True, blank=True) 
+    work_end_time = models.TimeField(null=True, blank=True) 
     late_checkin_buffer = models.IntegerField(default=10)  # Buffer in minutes
 
     def __str__(self):
-        return self.name
+        return self.name  
 
 
 class CustomUser(AbstractUser):
@@ -30,7 +31,10 @@ class CustomUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.department:
-            department, created = Department.objects.get_or_create(name='ADMIN')
+            department_model = apps.get_model('hrms', 'Department')
+            department, created = department_model.objects.get_or_create(name='ADMIN')
             self.department = department
         super().save(*args, **kwargs)
+
+
     
