@@ -1,291 +1,278 @@
 {% extends 'hrms/admin/base.html' %}
 {% load custom_filters %}
 
- 
 {% block content %}
 
-    <style>
-        /* Base styles */
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f0f3f7, #d9e3ea);
-            color: #333;
-        }
+<style>
+    /* Base styles */
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #f0f3f7, #d9e3ea);
+        color: #333;
+    }
 
+    .container {
+        max-width: 1100px; /* Increased width */
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 30px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    /* Form Elements */
+    .form-group label {
+        font-weight: 600;
+        color: #444;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 12px;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+    .tooltip-icon {
+        font-size: 0.9rem;
+        color: #888;
+        cursor: pointer;
+        margin-left: 6px;
+    }
+
+    /* Button Styling */
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        transition: background-color 0.3s;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    /* Footer Link */
+    .form-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 0.9rem;
+    }
+
+    .form-footer a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+
+    h5.text-primary {
+        margin-top: 20px;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
         .container {
-            max-width: 850px;
-            margin: 60px auto;
-            background-color: #fff;
-            padding: 30px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
         }
-
         .header {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2rem;
-            color: #007bff;
-            font-weight: bold;
+            font-size: 1.8rem;
         }
+        h5.text-primary {
+            font-size: 1.1rem;
+        }
+    }
 
-        /* Form Elements */
+    @media (max-width: 576px) {
         .form-group label {
-            font-weight: 600;
-            color: #444;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 12px;
-            transition: border 0.3s, box-shadow 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
-        }
-
-        .tooltip-icon {
             font-size: 0.9rem;
-            color: #888;
-            cursor: pointer;
-            margin-left: 6px;
+        }
+        .btn-submit {
+            font-size: 0.9rem;
+        }
+        .header {
+            font-size: 1.6rem;
         }
 
-        /* Button Styling */
-        .btn-submit {
-            background-color: #007bff;
-            color: white;
-            padding: 12px;
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check-inline {
+            display: inline-flex; /* Align radio button and label inline */
+            align-items: center; /* Vertically center-align items */
+            margin-right: 1rem; /* Add spacing between options */
+        }
+
+        .form-check-input {
+            margin: 0; /* Remove default margins */
+            vertical-align: middle; /* Align with the middle of the label */
+            margin-right: 0.5rem; /* Add spacing between the button and label */
+        }
+
+        .form-check-label {
+            margin: 0; /* Remove any unnecessary margins */
+            line-height: 1; /* Ensure consistent line height */
+            vertical-align: middle; /* Align label text with the middle of the button */
+        }
+
+        .btn-group-toggle .btn {
+            margin: 0 5px;
+            border-radius: 20px; /* Rounded edges for buttons */
+            padding: 8px 16px;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 8px;
-            border: none;
-            transition: background-color 0.3s;
-            width: 100%;
-            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .btn-submit:hover {
+        .btn-group-toggle .btn.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .btn-group-toggle .btn:hover {
             background-color: #0056b3;
+            color: white;
         }
 
-        /* Footer Link */
-        .form-footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 0.9rem;
+        /* Container for gender toggle buttons */
+        .gender-toggle-container {
+            display: flex;
+            justify-content: space-between; /* Adds space between the buttons */
+            max-width: 300px;
+            margin-top: 10px;
         }
 
-        .form-footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
-        h5.text-primary {
-            margin-top: 20px;
-            color: #007bff;
+        /* Styling for individual gender buttons */
+        .gender-btn {
+            border-radius: 50px; /* Round borders for buttons */
+            padding: 10px 20px; /* Adjust padding for better spacing */
+            font-size: 1rem;
             font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            width: 48%; /* Allows buttons to sit next to each other with space */
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin-top: 30px;
-            }
-            .header {
-                font-size: 1.8rem;
-            }
-            h5.text-primary {
-                font-size: 1.1rem;
-            }
+        .gender-btn:hover {
+            background-color: #0056b3;
+            color: white;
         }
 
-        @media (max-width: 576px) {
-            .form-group label {
-                font-size: 0.9rem;
-            }
-            .btn-submit {
-                font-size: 0.9rem;
-            }
-            .header {
-                font-size: 1.6rem;
-            }
-
-            .form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-check-inline {
-    display: inline-flex; /* Align radio button and label inline */
-    align-items: center; /* Vertically center-align items */
-    margin-right: 1rem; /* Add spacing between options */
-}
-
-.form-check-input {
-    margin: 0; /* Remove default margins */
-    vertical-align: middle; /* Align with the middle of the label */
-    margin-right: 0.5rem; /* Add spacing between the button and label */
-}
-
-.form-check-label {
-    margin: 0; /* Remove any unnecessary margins */
-    line-height: 1; /* Ensure consistent line height */
-    vertical-align: middle; /* Align label text with the middle of the button */
-}
-
-.btn-group-toggle .btn {
-    margin: 0 5px;
-    border-radius: 20px; /* Rounded edges for buttons */
-    padding: 8px 16px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btn-group-toggle .btn.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.btn-group-toggle .btn:hover {
-    background-color: #0056b3;
-    color: white;
-}
-
-/* Container for gender toggle buttons */
-.gender-toggle-container {
-    display: flex;
-    justify-content: space-between; /* Adds space between the buttons */
-    max-width: 300px;
-    margin-top: 10px;
-}
-
-/* Styling for individual gender buttons */
-.gender-btn {
-    border-radius: 50px; /* Round borders for buttons */
-    padding: 10px 20px; /* Adjust padding for better spacing */
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    text-align: center;
-    width: 48%; /* Allows buttons to sit next to each other with space */
-}
-
-.gender-btn:hover {
-    background-color: #0056b3;
-    color: white;
-}
-
-.gender-btn.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-
-
-
-
-
+        .gender-btn.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
         }
-    </style>
+    }
+</style>
 
-    <div class="container">
-        <div class="header">Add New Employee</div>
+<div class="container">
+    <div class="header">Add New Employee</div>
 
-        <form method="POST">
-            {% csrf_token %}
-            <h5 class="text-primary">Personal Details</h5>
-            <div class="form-group">
-                <label for="firstName">First Name</label>
-                {{ form.first_name|add_class:"form-control" }}
+    <form method="POST">
+        {% csrf_token %}
+        <h5 class="text-primary">Personal Details</h5>
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            {{ form.first_name|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            {{ form.last_name|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label class="d-block">Gender</label>
+            <div class="gender-toggle-container">
+                {% for radio in form.gender %}
+                    <label class="btn btn-outline-primary gender-btn">
+                        {{ radio.tag }} {{ radio.choice_label }}
+                    </label>
+                {% endfor %}
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="lastName">Last Name</label>
-                {{ form.last_name|add_class:"form-control" }}
-            </div>
+        <div class="form-group">
+            <label for="email">Email Address <i class="fas fa-info-circle tooltip-icon" title="Used for login and communication"></i></label>
+            {{ form.email|add_class:"form-control" }}
+        </div>
 
-            <div class="form-group">
-                <label class="d-block">Gender</label>
-                <div class="gender-toggle-container">
-                    {% for radio in form.gender %}
-                        <label class="btn btn-outline-primary gender-btn">
-                            {{ radio.tag }} {{ radio.choice_label }}
-                        </label>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            
-            
-            
-            
-                       
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            {{ form.phone|add_class:"form-control" }}
+        </div>
+    
+        <hr>
+        <h5 class="text-primary">Job Details</h5>
 
-            <div class="form-group">
-                <label for="email">Email Address <i class="fas fa-info-circle tooltip-icon" title="Used for login and communication"></i></label>
-                {{ form.email|add_class:"form-control" }}
-            </div>
+        <div class="form-group">
+            <label for="position">Position</label>
+            {{ form.position|add_class:"form-control" }}
+        </div>
 
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                {{ form.phone|add_class:"form-control" }}
-            </div>
-        
-            <hr>
-            <h5 class="text-primary">Job Details</h5>
+        <div class="form-group">
+            <label for="department">Department</label>
+            {{ form.department|add_class:"form-control" }}
+        </div>            
 
-            <div class="form-group">
-                <label for="position">Position</label>
-                {{ form.position|add_class:"form-control" }}
-            </div>
+        <div class="form-group">
+            <label for="startDate">Start Date</label>
+            {{ form.start_date|add_class:"form-control" }}
+        </div>
 
-            <div class="form-group">
-                <label for="department">Department</label>
-                {{ form.department|add_class:"form-control" }}
-            </div>            
+        <hr>
+        <h5 class="text-primary">Security</h5>
 
-            <div class="form-group">
-                <label for="startDate">Start Date</label>
-                {{ form.start_date|add_class:"form-control" }}
-            </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            {{ form.username|add_class:"form-control" }}
+        </div>
 
-            <hr>
-            <h5 class="text-primary">Security</h5>
+        <div class="form-group">
+            <label for="password">Password</label>
+            {{ form.password|add_class:"form-control" }}
+        </div>
 
-            <div class="form-group">
-                <label for="username">Username</label>
-                {{ form.username|add_class:"form-control" }}
-            </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            {{ form.confirm_password|add_class:"form-control" }}
+        </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                {{ form.password|add_class:"form-control" }}
-            </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            {{ form.role|add_class:"form-control" }}
+        </div>
 
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                {{ form.confirm_password|add_class:"form-control" }}
-            </div>
-
-            <div class="form-group">
-                <label for="role">Role</label>
-                {{ form.role|add_class:"form-control" }}
-            </div>
-
-            <button type="submit" class="btn-submit">Create Employee</button>
-        </form>
-    </div>
+        <button type="submit" class="btn-submit">Create Employee</button>
+    </form>
+</div>
 
 {% endblock %}

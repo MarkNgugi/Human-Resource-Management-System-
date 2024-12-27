@@ -64,8 +64,7 @@ def add_employee(request):
 
         return redirect('employeeprofile')
 
-    return render(request, '/home/smilex/Documents/PROJECTS/MIKE/HRMS/HRMS/hrms/templates/hrms/admin/employee-management/add_emloyee.html', {'form': form})
-
+    return render(request, 'hrms/admin/employee-management/add_emloyee.html', {'form': form})
 
 
 def document_management(request):

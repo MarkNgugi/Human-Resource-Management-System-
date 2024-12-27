@@ -27,7 +27,7 @@
         border: none;
         border-radius: 10px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-        max-width: 280px; /* Increased width slightly */
+        max-width: 280px;
         margin: auto;
         padding: 10px;
         transition: transform 0.2s;
@@ -37,7 +37,6 @@
         transform: translateY(-5px);
     }
 
-    /* Circular and resized image */
     .card-img-top {
         width: 90px;
         height: 90px;
@@ -55,14 +54,14 @@
     }
 
     .card-title {
-        font-size: 1.15rem; /* Slightly larger font */
+        font-size: 1.15rem;
         font-weight: bold;
         text-align: center;
         margin-top: 5px;
     }
 
     .card-text {
-        font-size: 0.9rem; /* Increased font size slightly */
+        font-size: 0.9rem;
         color: #555;
         text-align: center;
         margin-bottom: 5px;
@@ -75,7 +74,7 @@
         padding: 8px 16px;
         font-size: 0.9rem;
         align-self: center;
-        margin-top: auto; /* Ensures button is at the bottom */
+        margin-top: auto;
     }
 
     .btn-primary:hover {
@@ -101,7 +100,6 @@
                     <input type="text" name="q" id="searchInput" placeholder="Search for employees..." class="form-control w-50 mx-auto" value="{{ request.GET.q|default:'' }}">
                 </form>
             </div>
-            
 
             <!-- Employee Cards in a Single Row -->
             <div class="row justify-content-center">
@@ -115,7 +113,15 @@
                             <p class="card-text"><b>Department:</b> {{ employee.department }}</p>
                             <p class="card-text"><b>Role:</b> {{ employee.role }}</p>
                             <p class="card-text"><i class="mdi mdi-email"></i> <b>{{ employee.email }}</b></p>
-                            <a href="#" class="btn btn-primary">View Profile</a>
+                            <button class="btn btn-primary view-profile-btn" data-bs-toggle="modal" data-bs-target="#employeeModal"
+                                data-firstname="{{ employee.first_name }}"
+                                data-lastname="{{ employee.last_name }}"
+                                data-position="{{ employee.position }}"
+                                data-department="{{ employee.department }}"
+                                data-role="{{ employee.role }}"
+                                data-email="{{ employee.email }}">
+                                View Profile
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -124,21 +130,51 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('searchInput').addEventListener('keyup', function () {
-            const input = this.value.toLowerCase();
-            const cards = document.querySelectorAll('.employee-card');
+    <!-- Modal -->
+    <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="employeeModalLabel">Employee Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><b>Name:</b> <span id="modalFullName"></span></p>
+                    <p><b>Position:</b> <span id="modalPosition"></span></p>
+                    <p><b>Department:</b> <span id="modalDepartment"></span></p>
+                    <p><b>Role:</b> <span id="modalRole"></span></p>
+                    <p><b>Email:</b> <span id="modalEmail"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            cards.forEach(function (card) {
-                const name = card.querySelector('.card-title').innerText.toLowerCase();
-                if (name.includes(input)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+    <!-- Add Bootstrap and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // JavaScript to populate modal with employee details
+        document.querySelectorAll('.view-profile-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const firstName = this.getAttribute('data-firstname');
+                const lastName = this.getAttribute('data-lastname');
+                const position = this.getAttribute('data-position');
+                const department = this.getAttribute('data-department');
+                const role = this.getAttribute('data-role');
+                const email = this.getAttribute('data-email');
+
+                // Populate modal fields
+                document.getElementById('modalFullName').innerText = `${firstName} ${lastName}`;
+                document.getElementById('modalPosition').innerText = position;
+                document.getElementById('modalDepartment').innerText = department;
+                document.getElementById('modalRole').innerText = role;
+                document.getElementById('modalEmail').innerText = email;
             });
         });
-
     </script>
 </body>
 
