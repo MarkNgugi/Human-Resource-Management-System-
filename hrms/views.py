@@ -135,10 +135,23 @@ def offboarding(request):
 
 # ============================ATTENDANCE MANAGEMENT START============================
 
+
+
 def departments(request):
     departments = Department.objects.exclude(name="ADMIN")
-    context = {'departments':departments}
-    return render(request,'hrms/admin/attendance-management/departments.html',context)
+    if request.method == "POST":
+        name = request.POST.get("name")
+        work_start_time = request.POST.get("work_start_time")
+        late_checkin_buffer = request.POST.get("late_checkin_buffer", 10)
+        Department.objects.create(
+            name=name,
+            work_start_time=work_start_time,
+            late_checkin_buffer=late_checkin_buffer,
+        )
+        return redirect("departments")
+    context = {"departments": departments}
+    return render(request, "hrms/admin/attendance-management/departments.html", context)
+
  
 def dep_attendance(request, id):  
     department = Department.objects.get(id=id)  
@@ -354,7 +367,7 @@ def my_profile(request, id):
 
 # ============================MY PROFILE END===========================================
 
-
+ 
 
 # ============================LEAVE MANAGEMENT START===========================================
 

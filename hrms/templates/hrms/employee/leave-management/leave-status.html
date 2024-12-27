@@ -1,10 +1,157 @@
 {% extends 'hrms/employee/base.html' %}
 
 {% block content %}
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #eef2f7;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #007bff;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 12px 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    /* Table Styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th,
+    .table td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table thead th {
+        background-color: #007bff;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f1f5f9;
+    }
+
+    .table tbody tr:hover {
+        background-color: #e9ecef;
+        cursor: pointer;
+    }
+
+    .table tbody td {
+        font-size: 0.95rem;
+    }
+
+    /* Status Badges */
+    .status-approved {
+        color: #fff;
+        background-color: #28a745;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-align: center;
+        display: inline-block;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-declined {
+        color: #fff;
+        background-color: #dc3545;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-align: center;
+        display: inline-block;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-pending {
+        color: #fff;
+        background-color: #ffc107;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-align: center;
+        display: inline-block;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+        }
+
+        .btn-success {
+            font-size: 0.9rem;
+            padding: 10px 20px;
+        }
+
+        .table th,
+        .table td {
+            font-size: 0.85rem;
+            padding: 10px 15px;
+        }
+    }
+</style>
+
 <div class="container">
     <h2>My Leave Applications</h2>
-    <a href="{%url 'applyleave'%}" class="btn btn-success">Apply for Leave</a>
-    <table class="table table-striped">
+    <a href="{% url 'applyleave' %}" class="btn btn-success">Apply for Leave</a>
+    <table class="table">
         <thead>
             <tr>
                 <th>Leave Type</th>
@@ -12,14 +159,22 @@
                 <th>End Date</th>
                 <th>Status</th>
             </tr>
-        </thead> 
+        </thead>
         <tbody>
             {% for leave in leave_requests %}
             <tr>
                 <td>{{ leave.leave_type }}</td>
                 <td>{{ leave.start_date }}</td>
                 <td>{{ leave.end_date }}</td>
-                <td>{{ leave.get_status_display }}</td>
+                <td>
+                    {% if leave.status == 'APPROVED' %}
+                    <span class="status-approved">Approved</span>
+                    {% elif leave.status == 'DECLINED' %}
+                    <span class="status-declined">Declined</span>
+                    {% else %}
+                    <span class="status-pending">Pending</span>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -3,6 +3,7 @@
 
 <div class="department-page">
     <style>
+        /* General Page Styles */
         .department-page {
             padding: 20px;
             color: #333;
@@ -74,28 +75,187 @@
         .view-attendance-btn:hover {
             background-color: #2980b9;
         }
-        
-        .footer {
-            margin-top: 30px;
-            color: #7f8c8d;
-            font-size: 0.9em;
+
+        /* Add Department Button */
+        .add-department-btn-container {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .add-department-btn {
+            background-color: #28a745;
+            color: white;
+            font-size: 1.1em;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-department-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            transform: scale(0.9);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5em;
+            margin: 0;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2em;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-body input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+        }
+
+        .modal-body input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+        }
+
+        .modal-body label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .btn-submit {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #2980b9;
         }
     </style>
 
-    
     <h1>Our Departments</h1> <br>
+
+    <!-- Add Department Button -->
+    <div class="add-department-btn-container">
+        <button class="add-department-btn" id="add-department-btn">Add Department</button>
+    </div>
     
     <div class="department-container">
-        {%for department in departments%}
+        {% for department in departments %}
         <div class="department-card">
-            <h2>{{department.name}}</h2>
+            <h2>{{ department.name }}</h2>
             <p>Dedicated to employee engagement, development, and fostering a healthy work environment.</p>
-            <a href="{%url 'depattendance' department.id%}" class="view-attendance-btn">View Attendance</a>
+            <a href="{% url 'depattendance' department.id %}" class="view-attendance-btn">View Attendance</a>
         </div>
-        {%endfor%}
-        
+        {% endfor %}
     </div>
 
+    <!-- Modal -->
+    <div class="modal" id="add-department-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Department</h2>
+                <button class="modal-close" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'departments' %}">
+                    {% csrf_token %}
+                    <div>
+                        <label for="name">Department Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div>
+                        <label for="work_start_time">Work Start Time:</label>
+                        <input type="time" id="work_start_time" name="work_start_time">
+                    </div>
+                    <div>
+                        <label for="late_checkin_buffer">Late Check-in Buffer (Minutes):</label>
+                        <input type="number" id="late_checkin_buffer" name="late_checkin_buffer" value="10" min="1">
+                    </div>
+                    <button type="submit" class="btn-submit">Add Department</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    const addDepartmentBtn = document.getElementById('add-department-btn');
+    const modal = document.getElementById('add-department-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    addDepartmentBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+</script>
 
 {% endblock %}
