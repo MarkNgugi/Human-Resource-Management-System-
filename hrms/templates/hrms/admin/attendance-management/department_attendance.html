@@ -147,30 +147,6 @@
         </select>
     </div>
 
-    <!-- Summary Section: General Attendance Stats -->
-    <div class="summary-section">
-        <div class="summary-card">
-            <h2>Total Employees</h2>
-            <p>{{ total_employees }}</p>
-        </div>
-        <div class="summary-card">
-            <h2>Present Today</h2>
-            <p>{{ present_today }}</p>
-        </div>
-        <div class="summary-card">
-            <h2>Absent Today</h2>
-            <p>{{ absent_today }}</p>
-        </div>
-        <div class="summary-card">
-            <h2>Late Entries</h2>
-            <p>{{ late_entries }}</p>
-        </div>
-        <div class="summary-card">
-            <h2>On Leave</h2>
-            <p>{{ on_leave_today }}</p>
-        </div>        
-    </div>
-
 
     <!-- Date Range Filter -->
     <div class="date-filter">
@@ -189,8 +165,6 @@
                 <th>Employee Name</th>
                 <th>Check-in</th>
                 <th>Check-out</th>
-                <th>Status</th>
-                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -200,8 +174,6 @@
                 <td>{{record.employee.first_name }} {{ record.employee.last_name }}</td>
                 <td>{{record.check_in_time}}</td>
                 <td>{{record.check_out_time}}</td>
-                <td>{{record.attendance_status}}</td>
-                <td>{{ record.remarks }}</td>
 
             </tr>
            

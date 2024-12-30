@@ -206,10 +206,9 @@
                 <label class="filter-label" for="department">Department:</label>
                 <select class="filter-input" id="department" name="department">
                     <option value="">All Departments</option>
-                    <option value="HR">HR</option>
-                    <option value="Finance">Finance</option>
-                    <option value="Engineering">Engineering</option>
-                    <option value="Marketing">Marketing</option>
+                    {% for department in departments %}
+                        <option value="{{ department.name }}">{{ department.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
     
@@ -247,10 +246,6 @@
                 <span class="checkbox-label">Attendance</span>
             </label>
             <label class="metric-checkbox">
-                <input type="checkbox" name="metrics" value="punctuality">
-                <span class="checkbox-label">Punctuality</span>
-            </label>
-            <label class="metric-checkbox">
                 <input type="checkbox" name="metrics" value="leave">
                 <span class="checkbox-label">Leave Patterns</span>
             </label>
@@ -258,7 +253,7 @@
     
         <button type="submit" class="generate-btn">Generate Report</button>
     </form>
-    
+</div>
 
 <script>
     function generateReport() {

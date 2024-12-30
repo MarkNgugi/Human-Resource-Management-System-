@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from django.db.models import Count, F
 from weasyprint import HTML
 import json
-
+ 
 @login_required
 def dashboard(request):
     user_role = request.user.role
@@ -152,27 +152,24 @@ def departments(request):
     context = {"departments": departments}
     return render(request, "hrms/admin/attendance-management/departments.html", context)
 
- 
-def dep_attendance(request, id):  
-    department = Department.objects.get(id=id)  
-    attendance_records = AttendanceRecord.objects.filter(employee__department=department)
+from .models import Department, AttendanceRecord
 
-    total_employees = department.customuser_set.count()
-    # present_today = attendance_records.filter(attendance_status='present').count()
-    # absent_today = attendance_records.filter(attendance_status='absent').count()
-    # late_entries = attendance_records.filter(is_late=True).count()
-    # on_leave_today = attendance_records.filter(attendance_status='on_leave').count()
+def dep_attendance(request, id):  
+    department = Department.objects.get(id=id)  # Get the department
+    attendance_records = AttendanceRecord.objects.filter(employee__department=department)  # Get attendance records for the department
 
     context = {
         'department': department,
-        'attendance_records': attendance_records,
-        'total_employees': total_employees,
-        # 'present_today': present_today,
-        # 'absent_today': absent_today,
-        # 'late_entries': late_entries,
-        # 'on_leave_today': on_leave_today,
+        'attendance_records': attendance_records,  # Pass only the relevant data
     }
+
     return render(request, 'hrms/admin/attendance-management/department_attendance.html', context)
+
+
+
+
+
+
 
 
 def attendance_reports(request):
@@ -213,6 +210,12 @@ def leave_balance(request):
 
 # ============================REPORTS START=========================================
 
+
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from .models import CustomUser, AttendanceRecord, LeaveRequest, GeneratedReport
+# Other necessary imports
 
 def report_builder(request):
     employees = CustomUser.objects.all()
@@ -267,15 +270,18 @@ def report_builder(request):
             turnover = CustomUser.objects.filter(department__name=department, exit_date__range=[start_date, end_date]).count()
             report_data["turnover"] = turnover
 
-        # Generate PDF
-        html_template = "hrms/admin/reports/pdf_template.html"
-        pdf_content = render(request, html_template, {
+        # Generate PDF content
+        html_content = render_to_string("hrms/admin/reports/pdf_template.html", {
             "metrics": metrics,
             "report_data": report_data,
-        }).content
+            "start_date": start_date.strftime("%Y-%m-%d") if start_date else "N/A",
+            "end_date": end_date.strftime("%Y-%m-%d") if end_date else "N/A",
+        })
+
+        # Convert HTML to PDF
         report_name = f"Report_{datetime.today().strftime('%Y-%m-%d')}"
         pdf_file_path = f"reports/{report_name}.pdf"
-        HTML(string=pdf_content).write_pdf(pdf_file_path)
+        HTML(string=html_content).write_pdf(pdf_file_path)
 
         # Save the generated report to the database
         report = GeneratedReport.objects.create(
@@ -288,6 +294,7 @@ def report_builder(request):
         return redirect("report_list")
 
     return render(request, 'hrms/admin/reports/report-builder.html', {'employees': employees})
+
 
 
 

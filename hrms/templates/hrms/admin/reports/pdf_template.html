@@ -150,25 +150,6 @@
     </div>
     {% endif %}
 
-    {% if "punctuality" in metrics %}
-    <div class="section">
-        <h2>Punctuality</h2>
-        {% if report_data.punctuality %}
-            <div class="grid-container">
-            {% for record in report_data.punctuality %}
-            <div class="data-item">
-                <span><label>Date:</label> {{ record.date|date:"Y-m-d" }}</span>
-                <span><label>Status:</label> {{ record.punctuality_status }}</span>
-                <span><label>Check-in Time:</label> {{ record.check_in_time|time:"H:i" }}</span>
-            </div>
-            {% endfor %}
-            </div>
-        {% else %}
-            <p>No punctuality records available.</p>
-        {% endif %}
-    </div>
-    {% endif %}
-
     {% if "leave" in metrics %}
     <div class="section">
         <h2>Leave Patterns</h2>
@@ -188,8 +169,6 @@
         {% endif %}
     </div>
     {% endif %}
-
-    <!-- Repeat for other metrics like 'turnover', 'demographics', etc. -->
 
 </body>
 </html>
