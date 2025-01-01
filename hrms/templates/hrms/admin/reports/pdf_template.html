@@ -3,172 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Report</title>
+    <title>{{ report_name }}</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f7f7f7;
-            color: #2c3e50;
+            padding: 10px;
         }
         h1 {
             text-align: center;
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header p {
-            font-size: 16px;
-            color: #7f8c8d;
         }
         .section {
             margin-bottom: 20px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
         }
         .section h2 {
-            margin: 0;
-            padding: 16px;
-            background-color: #2c3e50;
-            color: white;
-            font-size: 22px;
-        }
-        .card {
-            padding: 20px;
-            background: #fff;
-            margin: 10px;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card label {
-            font-weight: bold;
-            color: #34495e;
-        }
-        .card span {
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        .card strong {
-            display: block;
-            font-size: 16px;
-            color: #2c3e50;
-            margin-top: 5px;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .data-item {
-            background: #ecf0f1;
-            padding: 10px;
-            border-radius: 6px;
             margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: #3498db;
         }
-        .data-item label {
-            font-weight: bold;
-            color: #2c3e50;
+        .section p {
+            margin: 5px 0;
         }
-        .data-item span {
-            color: #7f8c8d;
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
-        p {
-            padding: 10px 20px;
-            background: #f2f2f2;
-            border-radius: 5px;
-            color: #7f8c8d;
-            font-size: 14px;
+        .table th, .table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
+    <h1>{{ report_name }}</h1>
+    <p><strong>Report Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
 
-    <div class="header">
-        <h1>Custom Report</h1>
-        <p><strong>Report Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
-    </div>
-
-    {% if "demographics" in metrics %}
+    {% if 'basic_info' in metrics %}
     <div class="section">
-        <h2>Employee Demographics</h2>
-        <div class="grid-container">
-            <div class="card">
-                <label>Name:</label>
-                <strong>{{ report_data.demographics.name }}</strong>
-            </div>
-            <div class="card">
-                <label>Gender:</label>
-                <strong>{{ report_data.demographics.gender }}</strong>
-            </div>
-            <div class="card">
-                <label>Department:</label>
-                <strong>{{ report_data.demographics.department|default:"N/A" }}</strong>
-            </div>
-            <div class="card">
-                <label>Position:</label>
-                <strong>{{ report_data.demographics.position|default:"N/A" }}</strong>
-            </div>
-            <div class="card">
-                <label>Start Date:</label>
-                <strong>{{ report_data.demographics.start_date|date:"Y-m-d" }}</strong>
-            </div>
-        </div>
+        <h2>Basic Information</h2>
+        <p><strong>Name:</strong> {{ report_data.basic_info.name }}</p>
+        <p><strong>Gender:</strong> {{ report_data.basic_info.gender }}</p>
+        <p><strong>Department:</strong> {{ report_data.basic_info.department }}</p>
+        <p><strong>Position:</strong> {{ report_data.basic_info.position }}</p>
+        <p><strong>Start Date:</strong> {{ report_data.basic_info.start_date }}</p>
+        <p><strong>Exit Date:</strong> {{ report_data.basic_info.exit_date }}</p>
+        <p><strong>Reason for Leaving:</strong> {{ report_data.basic_info.reason_for_leaving }}</p>
     </div>
     {% endif %}
 
-    {% if "attendance" in metrics %}
+    {% if 'attendance_overview' in metrics %}
     <div class="section">
-        <h2>Attendance Records</h2>
-        {% if report_data.attendance %}
-            <div class="grid-container">
-            {% for record in report_data.attendance %}
-            <div class="data-item">
-                <span><label>Date:</label> {{ record.date|date:"Y-m-d" }}</span>
-                <span><label>Status:</label> {{ record.attendance_status|yesno:"Present,Absent" }}</span>
-                <span><label>Check-in:</label> {{ record.check_in_time|time:"H:i" }}</span>
-                <span><label>Check-out:</label> {{ record.check_out_time|time:"H:i" }}</span>
-            </div>
-            {% endfor %}
-            </div>
-        {% else %}
-            <p>No attendance records available.</p>
-        {% endif %}
+        <h2>Attendance Overview</h2>
+        <table class="table">
+            <tr>
+                <th>Total Days Worked</th>
+                <td>{{ report_data.attendance_overview.total_days_worked }}</td>
+            </tr>
+            <tr>
+                <th>Average Check-in Time</th>
+                <td>{{ report_data.attendance_overview.average_check_in_time }} hours</td>
+            </tr>
+            <tr>
+                <th>Average Check-out Time</th>
+                <td>{{ report_data.attendance_overview.average_check_out_time }} hours</td>
+            </tr>
+            <tr>
+                <th>Late Check-ins</th>
+                <td>{{ report_data.attendance_overview.days_late }}</td>
+            </tr>
+        </table>
     </div>
     {% endif %}
 
-    {% if "leave" in metrics %}
+    {% if 'leave_request' in metrics %}
     <div class="section">
-        <h2>Leave Patterns</h2>
-        {% if report_data.leave %}
-            <div class="grid-container">
-            {% for leave in report_data.leave %}
-            <div class="data-item">
-                <span><label>Leave Type:</label> {{ leave.leave_type }}</span>
-                <span><label>Start:</label> {{ leave.start_date|date:"Y-m-d" }}</span>
-                <span><label>End:</label> {{ leave.end_date|date:"Y-m-d" }}</span>
-                <span><label>Status:</label> {{ leave.status }}</span>
-            </div>
-            {% endfor %}
-            </div>
-        {% else %}
-            <p>No leave records available.</p>
-        {% endif %}
+        <h2>Leave Requests</h2>
+        <table class="table">
+            <tr>
+                <th>Total Leave Requests</th>
+                <td>{{ report_data.leave_request.total_leave_requests }}</td>
+            </tr>
+            <tr>
+                <th>Approved Leaves</th>
+                <td>{{ report_data.leave_request.approved_leaves }}</td>
+            </tr>
+            <tr>
+                <th>Pending Leaves</th>
+                <td>{{ report_data.leave_request.pending_leaves }}</td>
+            </tr>
+            <tr>
+                <th>Declined Leaves</th>
+                <td>{{ report_data.leave_request.declined_leaves }}</td>
+            </tr>
+            <tr>
+                <th>Leave Days Requested</th>
+                <td>{{ report_data.leave_request.leave_days_requested }}</td>
+            </tr>
+            <tr>
+                <th>Leave Days Approved</th>
+                <td>{{ report_data.leave_request.leave_days_approved }}</td>
+            </tr>
+        </table>
     </div>
     {% endif %}
-
 </body>
 </html>

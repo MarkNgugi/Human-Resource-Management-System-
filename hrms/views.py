@@ -214,17 +214,16 @@ def leave_balance(request):
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from .models import CustomUser, AttendanceRecord, LeaveRequest, GeneratedReport
+from weasyprint import HTML  # Ensure weasyprint is installed for PDF generation
+from .models import CustomUser, AttendanceRecord, LeaveRequest
 # Other necessary imports
 
 def report_builder(request):
-    employees = CustomUser.objects.all()
+    employees = CustomUser.objects.all()  # Fetch all employees
 
     if request.method == "POST":
         # Gather form data
         employee_id = request.POST.get("employee")
-        department = request.POST.get("department")
-        job_role = request.POST.get("jobRole")        
         metrics = request.POST.getlist("metrics")
         date_from = request.POST.get("date_from")
         date_to = request.POST.get("date_to")
@@ -234,7 +233,6 @@ def report_builder(request):
             start_date = datetime.strptime(date_from, "%Y-%m-%d")
             end_date = datetime.strptime(date_to, "%Y-%m-%d")
         except ValueError:
-            # Handle invalid date format, possibly show an error
             start_date = end_date = None
 
         # Filter employees if selected
@@ -245,30 +243,42 @@ def report_builder(request):
         # Query data for the selected metrics
         report_data = {}
 
-        # Employee Demographics
-        if "demographics" in metrics and selected_employee:
-            report_data["demographics"] = {
+        # Include username of the selected employee
+        if selected_employee:
+            report_data["username"] = selected_employee.username
+
+        # Basic Info (using available user data)
+        if "basic_info" in metrics and selected_employee:
+            report_data["basic_info"] = {
                 "name": f"{selected_employee.first_name} {selected_employee.last_name}",
                 "gender": selected_employee.gender,
                 "department": selected_employee.department.name if selected_employee.department else "N/A",
                 "position": selected_employee.position or "N/A",
                 "start_date": selected_employee.start_date or "N/A",
+                "exit_date": selected_employee.exit_date or "N/A",
+                "reason_for_leaving": selected_employee.reason_for_leaving or "N/A",
             }
 
-        # Attendance Data (filtered by date range)
-        if "attendance" in metrics and selected_employee:
+        # Attendance Overview (filtered by date range)
+        if "attendance_overview" in metrics and selected_employee:
             attendance = AttendanceRecord.objects.filter(employee=selected_employee, date__range=[start_date, end_date])
-            report_data["attendance"] = attendance
+            report_data["attendance_overview"] = {
+                "total_days_worked": attendance.count(),
+                "average_check_in_time": calculate_average_check_in(attendance),
+                "average_check_out_time": calculate_average_check_out(attendance),
+            }
 
-        # Leave Patterns (filtered by date range)
-        if "leave" in metrics and selected_employee:
+        # Leave Requests (filtered by date range)
+        if "leave_request" in metrics and selected_employee:
             leave_requests = LeaveRequest.objects.filter(employee=selected_employee, start_date__range=[start_date, end_date])
-            report_data["leave"] = leave_requests
-
-        # Turnover (filtered by department and exit date)
-        if "turnover" in metrics and department:
-            turnover = CustomUser.objects.filter(department__name=department, exit_date__range=[start_date, end_date]).count()
-            report_data["turnover"] = turnover
+            report_data["leave_request"] = {
+                "total_leave_requests": leave_requests.count(),
+                "approved_leaves": leave_requests.filter(status="APPROVED").count(),
+                "pending_leaves": leave_requests.filter(status="PENDING").count(),
+                "declined_leaves": leave_requests.filter(status="DECLINED").count(),
+                "leave_days_requested": sum([leave.days_requested for leave in leave_requests]),
+                "leave_days_approved": sum([leave.days_approved for leave in leave_requests if leave.days_approved]),
+            }
 
         # Generate PDF content
         html_content = render_to_string("hrms/admin/reports/pdf_template.html", {
@@ -285,15 +295,29 @@ def report_builder(request):
 
         # Save the generated report to the database
         report = GeneratedReport.objects.create(
+            employee=selected_employee,
             report_name=report_name,
             metrics_selected=metrics,
-            filters_used={"employee": employee_id, "department": department, "job_role": job_role, "date_from": date_from, "date_to": date_to},
+            filters_used={"employee": employee_id, "date_from": date_from, "date_to": date_to},
             pdf_file=pdf_file_path,
         )
 
         return redirect("report_list")
 
     return render(request, 'hrms/admin/reports/report-builder.html', {'employees': employees})
+
+
+# Helper functions for attendance calculations
+def calculate_average_check_in(attendance_records):
+    """Calculate average check-in time from AttendanceRecord."""
+    total_check_in_time = sum([record.check_in_time.hour + record.check_in_time.minute / 60 for record in attendance_records if record.check_in_time])
+    return total_check_in_time / len(attendance_records) if attendance_records else 0
+
+def calculate_average_check_out(attendance_records):
+    """Calculate average check-out time from AttendanceRecord."""
+    total_check_out_time = sum([record.check_out_time.hour + record.check_out_time.minute / 60 for record in attendance_records if record.check_out_time])
+    return total_check_out_time / len(attendance_records) if attendance_records else 0
+
 
 
 

@@ -3,7 +3,7 @@ from accounts.models import *
 from django.db import models
 from datetime import timedelta
 from django.utils import timezone
-  
+    
 
 class Document(models.Model):
     employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='documents')
@@ -20,13 +20,15 @@ class AttendanceRecord(models.Model):
     employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateField()
     check_in_time = models.DateTimeField(null=True, blank=True)
-    check_out_time = models.DateTimeField(null=True, blank=True)        
+    check_out_time = models.DateTimeField(null=True, blank=True)   
+    status = models.CharField(max_length=20,default='no info')     
+    checkout_status = models.CharField(max_length=20,default='no info')
     created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.employee.username} - {self.date}'
 
-
+ 
 
 class LeaveRequest(models.Model):
     STATUS_CHOICES = [
@@ -62,6 +64,7 @@ class LeaveRequest(models.Model):
 
     
 class GeneratedReport(models.Model):
+    employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     report_name = models.CharField(max_length=255)
     metrics_selected = models.JSONField() 
     filters_used = models.JSONField()
