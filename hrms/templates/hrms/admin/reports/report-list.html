@@ -1,123 +1,155 @@
 {% extends 'hrms/admin/base.html' %}
 
 {% block content %}
+<style>
+  /* Basic reset and font setup */
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+  }
 
-  <style>
-    /* Basic reset and font setup */
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-    }
+  /* Main container for all reports */
+  .reports-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    margin-top: 30px;
+  }
 
-    /* Main container for all reports */
-    .reports-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
-      gap: 20px;
-      padding: 20px;
-      justify-content: center;
-      margin-top: 30px;
-    }
+  /* Style for each report card */
+  .report-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    padding: 20px;
+    border-left: 5px solid #3498db;
+  }
 
-    /* Style for each report card */
-    .report-card {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
-      padding: 20px;
-      border-left: 5px solid #3498db;
-    }
+  /* Card hover effect */
+  .report-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
 
-    /* Card hover effect */
-    .report-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    }
+  /* Header for the card */
+  .report-card-header {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2a3e52;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 
-    /* Header for the card */
-    .report-card-header {
-      font-size: 20px;
+  /* Styling for metrics and filters section */
+  .report-metrics,
+  .report-filters {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+  }
+
+  /* Strong style for labels in metrics and filters */
+  .report-metrics strong,
+  .report-filters strong {
+    color: #3498db;
+  }
+
+  /* Button-style link for download action */
+  .download-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Button hover effect */
+  .download-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+  }
+
+  /* Button active effect */
+  .download-btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Enhanced styling for 'No reports available' message */
+  .no-reports-message {
+      text-align: center;
+      font-size: 2rem;
       font-weight: bold;
-      color: #2a3e52;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+      color: #e74c3c; /* Red color for attention */
+      background-color: #fce4e4; /* Light red background */
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin: 40px 0;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.3s ease-in-out;
+  }
 
-    /* Styling for metrics and filters section */
-    .report-metrics, .report-filters {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 15px;
-    }
+  /* Animation for the 'No reports available' message */
+  .no-reports-message:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
 
-    /* Strong style for labels in metrics and filters */
-    .report-metrics strong, .report-filters strong {
-      color: #3498db;
-    }
-
-    /* Button-style link for download action */
-    .download-btn {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 4px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Button hover effect */
-    .download-btn:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
-    }
-
-    /* Button active effect */
-    .download-btn:active {
-      transform: translateY(1px);
-    }
-
-    /* For smaller screens */
-    @media (max-width: 768px) {
+  /* For smaller screens */
+  @media (max-width: 768px) {
       .report-card {
-        padding: 15px;
+          padding: 15px;
       }
 
       .report-card-header {
-        font-size: 16px;
+          font-size: 16px;
       }
 
       .download-btn {
-        font-size: 12px;
-        padding: 8px 16px;
+          font-size: 12px;
+          padding: 8px 16px;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <div class="reports-container">
-    {% for report in reports %}
-    <div class="report-card">
-        <div class="report-card-header">{{ report.report_name }}</div>
-        <div class="report-metrics">
-            <strong>Employee:</strong> {{ report.employee.username }}
+      .no-reports-message {
+          font-size: 1.5rem;
+          padding: 15px;
+      }
+  }
+</style>
+
+
+<div class="reports-container">
+    {% if reports %}
+        {% for report in reports %}
+        <div class="report-card">
+            <div class="report-card-header">{{ report.report_name }}</div>
+            <div class="report-metrics">
+                <strong>Employee:</strong> {{ report.employee.username }}
+            </div>
+            <div class="report-filters">
+                <strong>Filters Used:</strong> {{ report.filters_used }}
+            </div>
+            <a href="{% url 'export_report_pdf' report.id %}" class="download-btn">Download PDF</a>
         </div>
-        <div class="report-filters">
-            <strong>Filters Used:</strong> {{ report.filters_used }}</body>
-        </div>
-        <a href="{% url 'export_report_pdf' report.id %}" class="download-btn">Download PDF</a>
-    </div>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <div class="no-reports-message">No reports available</div>
+    {% endif %}
 </div>
-
 
 {% endblock %}

@@ -214,41 +214,62 @@ def leave_balance(request):
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.contrib import messages
 from weasyprint import HTML  # Ensure weasyprint is installed for PDF generation
-from .models import CustomUser, AttendanceRecord, LeaveRequest
-# Other necessary imports
+from .models import CustomUser, Department, AttendanceRecord, LeaveRequest, GeneratedReport
 
 def report_builder(request):
-    employees = CustomUser.objects.all()  # Fetch all employees
+    employees = CustomUser.objects.filter(is_active=True).exclude(first_name="", last_name="")
+    departments = Department.objects.exclude(name="ADMIN")
+
 
     if request.method == "POST":
         # Gather form data
         employee_id = request.POST.get("employee")
+        department_name = request.POST.get("department")
         metrics = request.POST.getlist("metrics")
         date_from = request.POST.get("date_from")
         date_to = request.POST.get("date_to")
+
+        # Validate employee and department selection
+        if not employee_id:
+            messages.error(request, "Please select an employee.")
+            return redirect("reportbuilder")
+
+        if not department_name:
+            messages.error(request, "Please select a department.")
+            return redirect("reportbuilder")
 
         # Parse the date range
         try:
             start_date = datetime.strptime(date_from, "%Y-%m-%d")
             end_date = datetime.strptime(date_to, "%Y-%m-%d")
         except ValueError:
-            start_date = end_date = None
+            messages.error(request, "Invalid date range.")
+            return redirect("reportbuilder")
 
-        # Filter employees if selected
-        selected_employee = None
-        if employee_id:
+        # Validate employee and department relationship
+        try:
             selected_employee = CustomUser.objects.get(id=employee_id)
+        except CustomUser.DoesNotExist:
+            messages.error(request, "Selected employee does not exist.")
+            return redirect("reportbuilder")
 
-        # Query data for the selected metrics
-        report_data = {}
+        selected_department = Department.objects.filter(name=department_name).first()
+        if not selected_department:
+            messages.error(request, "Selected department does not exist.")
+            return redirect("reportbuilder")
 
-        # Include username of the selected employee
-        if selected_employee:
-            report_data["username"] = selected_employee.username
+        if selected_employee.department != selected_department:
+            messages.error(
+                request, f"{selected_employee.first_name} does not belong to the {selected_department.name} department."
+            )
+            return redirect("reportbuilder")
 
-        # Basic Info (using available user data)
-        if "basic_info" in metrics and selected_employee:
+        # Prepare report data
+        report_data = {"username": selected_employee.username}
+
+        if "basic_info" in metrics:
             report_data["basic_info"] = {
                 "name": f"{selected_employee.first_name} {selected_employee.last_name}",
                 "gender": selected_employee.gender,
@@ -259,18 +280,20 @@ def report_builder(request):
                 "reason_for_leaving": selected_employee.reason_for_leaving or "N/A",
             }
 
-        # Attendance Overview (filtered by date range)
-        if "attendance_overview" in metrics and selected_employee:
-            attendance = AttendanceRecord.objects.filter(employee=selected_employee, date__range=[start_date, end_date])
+        if "attendance_overview" in metrics:
+            attendance = AttendanceRecord.objects.filter(
+                employee=selected_employee, date__range=[start_date, end_date]
+            )
             report_data["attendance_overview"] = {
                 "total_days_worked": attendance.count(),
                 "average_check_in_time": calculate_average_check_in(attendance),
                 "average_check_out_time": calculate_average_check_out(attendance),
             }
 
-        # Leave Requests (filtered by date range)
-        if "leave_request" in metrics and selected_employee:
-            leave_requests = LeaveRequest.objects.filter(employee=selected_employee, start_date__range=[start_date, end_date])
+        if "leave_request" in metrics:
+            leave_requests = LeaveRequest.objects.filter(
+                employee=selected_employee, start_date__range=[start_date, end_date]
+            )
             report_data["leave_request"] = {
                 "total_leave_requests": leave_requests.count(),
                 "approved_leaves": leave_requests.filter(status="APPROVED").count(),
@@ -280,21 +303,20 @@ def report_builder(request):
                 "leave_days_approved": sum([leave.days_approved for leave in leave_requests if leave.days_approved]),
             }
 
-        # Generate PDF content
+        # Generate PDF
         html_content = render_to_string("hrms/admin/reports/pdf_template.html", {
             "metrics": metrics,
             "report_data": report_data,
-            "start_date": start_date.strftime("%Y-%m-%d") if start_date else "N/A",
-            "end_date": end_date.strftime("%Y-%m-%d") if end_date else "N/A",
+            "start_date": start_date.strftime("%Y-%m-%d"),
+            "end_date": end_date.strftime("%Y-%m-%d"),
         })
 
-        # Convert HTML to PDF
         report_name = f"Report_{datetime.today().strftime('%Y-%m-%d')}"
         pdf_file_path = f"reports/{report_name}.pdf"
         HTML(string=html_content).write_pdf(pdf_file_path)
 
-        # Save the generated report to the database
-        report = GeneratedReport.objects.create(
+        # Save generated report
+        GeneratedReport.objects.create(
             employee=selected_employee,
             report_name=report_name,
             metrics_selected=metrics,
@@ -304,7 +326,13 @@ def report_builder(request):
 
         return redirect("report_list")
 
-    return render(request, 'hrms/admin/reports/report-builder.html', {'employees': employees})
+    return render(request, 'hrms/admin/reports/report-builder.html', {
+        'employees': employees,
+        'departments': departments,
+    })
+
+
+
 
 
 # Helper functions for attendance calculations

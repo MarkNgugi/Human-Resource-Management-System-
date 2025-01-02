@@ -1,163 +1,104 @@
 {% extends 'hrms/admin/base.html' %}
 
 {% block content %}
-
 <style>
-    /* Global Styling */
+    /* Modern Styling */
     body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f6f8;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to bottom, #eef2f3, #8e9eab);
         color: #333;
         margin: 0;
         padding: 0;
     }
 
     .container {
-        max-width: 1000px;
-        margin: 30px auto;
+        max-width: 900px;
+        margin: 40px auto;
         padding: 30px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         animation: fadeIn 0.8s ease;
     }
 
     .header {
-        font-size: 2rem;
+        font-size: 2.8rem;
         font-weight: 700;
-        color: #2a3e52;
+        color: #34495e;
         margin-bottom: 20px;
         text-align: center;
-        letter-spacing: 1px;
     }
 
-    /* Filter Section */
-    .filters-section {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 30px;
+    .form-section {
+        margin-bottom: 25px;
     }
 
-    .filter-group {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px;
-        background-color: #f9fafc;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .filter-label {
-        font-size: 1rem;
-        color: #444;
+    .form-label {
+        font-size: 1.1rem;
+        color: #4a4a4a;
+        margin-bottom: 10px;
+        display: block;
         font-weight: bold;
     }
 
-    .filter-input {
-        flex: 1;
-        max-width: 250px;
-        padding: 8px;
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 12px;
         font-size: 1rem;
-        border-radius: 6px;
         border: 1px solid #ddd;
-        background-color: #ffffff;
-        transition: all 0.2s ease;
+        border-radius: 10px;
+        background: #fafafa;
+        transition: all 0.3s ease;
     }
 
-    .filter-input:focus {
-        border-color: #3498db;
-        outline: none;
-        box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+    .form-input:focus,
+    .form-select:focus {
+        border-color: #1abc9c;
+        box-shadow: 0 0 8px rgba(26, 188, 156, 0.2);
     }
 
-    /* Metric Checkboxes */
     .metrics-section {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
     }
 
     .metric-checkbox {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px;
+        gap: 12px;
+        padding: 15px;
         border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #f9fafc;
+        border-radius: 12px;
+        background: #f9f9f9;
+        transition: all 0.3s ease;
         cursor: pointer;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .metric-checkbox:hover {
-        background-color: #e8f3fd;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .employee-section {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px;
-        background-color: #f9fafc;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-    }
-
-    .employee-label {
-        font-size: 1rem;
-        color: #444;
-        font-weight: bold;
-    }
-
-    .employee-input {
-        flex: 1;
-        max-width: 300px;
-        padding: 8px;
-        font-size: 1rem;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        background-color: #ffffff;
-        transition: all 0.2s ease;
-    }
-
-    .employee-input:focus {
-        border-color: #3498db;
-        outline: none;
-        box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
-    }    
-
-    .checkbox-label {
-        font-size: 1rem;
-        color: #333;
-    }
-
-    /* Generate Report Button */
-    .generate-btn {
-        display: block;
-        width: 100%;
-        padding: 15px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        text-align: center;
-        color: #ffffff;
-        background-color: #3498db;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        margin-top: 25px;
-        letter-spacing: 1px;
+        background: #f0fdfa;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
+    .generate-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(to right, #1abc9c, #16a085);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 30px;
+    }
+
     .generate-btn:hover {
-        background-color: #2980b9;
-        transform: translateY(-2px);
+        background: linear-gradient(to right, #16a085, #1abc9c);
+        transform: translateY(-3px);
     }
 
     .generate-btn:active {
@@ -166,24 +107,63 @@
 
     /* Responsive Design */
     @media (max-width: 768px) {
-        .filter-group {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .filter-input {
-            width: 100%;
+        .metrics-section {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
     }
 
     /* Fade-in Animation */
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-
 </style>
+
+{% if messages %}
+<div class="messages">
+    <style>
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 <div class="container">
     <div class="header">Custom Report Builder</div>
@@ -191,71 +171,72 @@
     <form method="post" action="{% url 'reportbuilder' %}" id="reportForm">
         {% csrf_token %}
         
-        <div class="employee-section">
-            <label class="employee-label" for="employee">Select Employee:</label>
-            <select class="employee-input" id="employee" name="employee">
-                <option value="">All Employees</option>
+        <div class="form-section">
+            <label class="form-label" for="employee">Select Employee:</label>
+            <select class="form-select" id="employee" name="employee" required>
+                <option value="" disabled selected>Select an Employee</option>
                 {% for employee in employees %}
                     <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
                 {% endfor %}
             </select>
         </div>
-    
-        <div class="filters-section">
-            <div class="filter-group">
-                <label class="filter-label" for="department">Department:</label>
-                <select class="filter-input" id="department" name="department">
-                    <option value="">All Departments</option>
-                    {% for department in departments %}
-                        <option value="{{ department.name }}">{{ department.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-    
-            <div class="filter-group">
-                <label class="filter-label" for="jobRole">Job Role:</label>
-                <select class="filter-input" id="jobRole" name="jobRole">
-                    <option value="">All Roles</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Developer">Developer</option>
-                    <option value="Designer">Designer</option>
-                    <option value="Analyst">Analyst</option>
-                </select>
-            </div>
-    
-            <div class="filter-group">
-                <label for="date_from">Start Date</label>
-                <input type="date" name="date_from" id="date_from" required>
-            
-                <label for="date_to">End Date</label>
-                <input type="date" name="date_to" id="date_to" required>
-            </div>
+
+        <div class="form-section">
+            <label class="form-label" for="department">Select Department:</label>
+            <select class="form-select" id="department" name="department" required>
+                {% for department in departments %}
+                    <option value="{{ department.name }}">{{ department.name }}</option>
+                {% endfor %}
+            </select>
         </div>
-    
+
+        <div class="form-section">
+            <label class="form-label" for="date_from">Start Date:</label>
+            <input class="form-input" type="date" name="date_from" id="date_from" required>
+        </div>
+
+        <div class="form-section">
+            <label class="form-label" for="date_to">End Date:</label>
+            <input class="form-input" type="date" name="date_to" id="date_to" required>
+        </div>
+
         <div class="metrics-section">
             <label class="metric-checkbox">
                 <input type="checkbox" name="metrics" value="basic_info">
-                <span class="checkbox-label">Basic Info</span>
+                <span>Basic Info</span>
             </label>
             <label class="metric-checkbox">
                 <input type="checkbox" name="metrics" value="attendance_overview">
-                <span class="checkbox-label">Attendance Overview</span>
+                <span>Attendance Overview</span>
             </label>
             <label class="metric-checkbox">
                 <input type="checkbox" name="metrics" value="leave_request">
-                <span class="checkbox-label">Leave Request</span>
+                <span>Leave Request</span>
             </label>
         </div>
-        
-    
+
         <button type="submit" class="generate-btn">Generate Report</button>
     </form>
 </div>
 
 <script>
-    function generateReport() {
-        alert("Report generation initiated.");
-    }
+    const employees = JSON.parse('{{ employees|safe|escapejs }}');
+    const form = document.getElementById('reportForm');
+    const employeeSelect = document.getElementById('employee');
+    const departmentSelect = document.getElementById('department');
+
+    form.addEventListener('submit', function(event) {
+        const selectedEmployee = employeeSelect.value;
+        const selectedDepartment = departmentSelect.value;
+
+        if (selectedEmployee && selectedDepartment) {
+            const employee = employees.find(emp => emp.id == selectedEmployee);
+            if (employee && employee.department.name !== selectedDepartment) {
+                event.preventDefault();
+                alert('The selected employee does not belong to the chosen department.');
+            }
+        }
+    });
 </script>
 
 {% endblock %}

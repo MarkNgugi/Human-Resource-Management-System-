@@ -108,18 +108,16 @@
                     <div class="card text-center">
                         <img src="/static/images/faces/face1.jpg" class="card-img-top" alt="Employee 1">
                         <div class="card-body">
-                            <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>
-                            <p class="card-text"><b>Position:</b> {{ employee.position }}</p>
-                            <p class="card-text"><b>Department:</b> {{ employee.department }}</p>
-                            <p class="card-text"><b>Role:</b> {{ employee.role }}</p>
-                            <p class="card-text"><i class="mdi mdi-email"></i> <b>{{ employee.email }}</b></p>
+                            <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>                            
+                            <p class="card-text"><b>Department:</b> {{ employee.department }}</p>                                                    
                             <button class="btn btn-primary view-profile-btn" data-bs-toggle="modal" data-bs-target="#employeeModal"
                                 data-firstname="{{ employee.first_name }}"
                                 data-lastname="{{ employee.last_name }}"
                                 data-position="{{ employee.position }}"
                                 data-department="{{ employee.department }}"
                                 data-role="{{ employee.role }}"
-                                data-email="{{ employee.email }}">
+                                data-email="{{ employee.email }}"
+                                data-phone="{{employee.phone}}">
                                 View Profile
                             </button>
                         </div>
@@ -136,7 +134,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="employeeModalLabel">Employee Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
                 <div class="modal-body">
                     <p><b>Name:</b> <span id="modalFullName"></span></p>
@@ -144,6 +142,7 @@
                     <p><b>Department:</b> <span id="modalDepartment"></span></p>
                     <p><b>Role:</b> <span id="modalRole"></span></p>
                     <p><b>Email:</b> <span id="modalEmail"></span></p>
+                    <p><b>Phone:</b> <span id="modalPhone"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -166,6 +165,7 @@
                 const department = this.getAttribute('data-department');
                 const role = this.getAttribute('data-role');
                 const email = this.getAttribute('data-email');
+                const phone = this.getAttribute('data-phone');
 
                 // Populate modal fields
                 document.getElementById('modalFullName').innerText = `${firstName} ${lastName}`;
@@ -173,9 +173,11 @@
                 document.getElementById('modalDepartment').innerText = department;
                 document.getElementById('modalRole').innerText = role;
                 document.getElementById('modalEmail').innerText = email;
+                document.getElementById('modalPhone').innerText = phone;
             });
         });
     </script>
 </body>
 
 {% endblock %}
+
