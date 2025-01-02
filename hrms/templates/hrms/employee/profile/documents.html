@@ -1,0 +1,50 @@
+{% extends 'hrms/employee/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg rounded">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Manage Documents for {{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Available Documents Section -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">Available Documents</h5>
+                        {% if documents %}
+                        <div class="row">
+                            {% for document in documents %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm rounded border-light bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary font-weight-bold">{{ document.title }}</h6>
+                                        <p class="card-text text-muted">{{ document.description }}</p>
+
+                                        <!-- Check if document has a file associated with it -->
+                                        {% if document.file %}
+                                        <!-- View Document Button: Opens document in a new tab -->
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <a href="{{ document.file.url }}" target="_blank" class="btn btn-info btn-sm">View</a>
+                                            <!-- Download Document Button: Downloads the document -->
+                                            <a href="{{ document.file.url }}" download class="btn btn-success btn-sm">Download</a>
+                                        </div>
+                                        {% else %}
+                                        <p class="text-muted mt-2">No file available for this document.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No documents available for this employee.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

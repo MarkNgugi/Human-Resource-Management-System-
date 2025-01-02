@@ -509,6 +509,12 @@ def my_profile(request, id):
     context = {'employee_details': employee_details}
     return render(request, 'hrms/employee/profile/profile.html', context)
 
+def my_documents(request):
+    # Fetch documents related to the logged-in user
+    documents = Document.objects.filter(employee=request.user)
+    return render(request, 'hrms/employee/profile/documents.html', {'documents': documents})
+
+
 
 # ============================MY PROFILE END===========================================
 

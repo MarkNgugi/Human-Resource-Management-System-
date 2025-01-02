@@ -43,6 +43,8 @@ urlpatterns = [
 
     path('checkinorout/<int:id>/', check_in_or_out, name='check_in_or_out'),
     path('profile/<int:id>/',my_profile,name='myprofile'), 
+    path('documnets/',my_documents,name='mydocs'), 
+
 
     path('apply_leave/', apply_leave, name='applyleave'),
     path('leave_status/',employee_leave_status, name='employeeleavestatus'),

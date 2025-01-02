@@ -3,7 +3,7 @@ from accounts.models import *
 from django.db import models
 from datetime import timedelta
 from django.utils import timezone
-    
+     
 
 class Document(models.Model):
     employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='documents')
