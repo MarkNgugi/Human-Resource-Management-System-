@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code</title>
+</head>
+<body>
+    <h1>Scan the QR Code</h1>
+    <p>Please scan the QR code with your authenticator app.</p>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+
+    <a href="{% url 'verify_otp' %}">
+        <button type="button">Proceed to OTP Verification</button>
+    </a>
+</body>
+</html>

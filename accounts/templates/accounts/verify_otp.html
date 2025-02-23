@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: #333;
+        }
+        .otp-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .otp-container h1 {
+            margin-bottom: 1.5rem;
+            color: #444;
+            font-size: 2rem;
+        }
+        .otp-container label {
+            display: block;
+            font-weight: bold;
+            margin: 0.5rem 0 0.25rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .otp-container input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .otp-container input:focus {
+            border-color: #ff7e5f;
+            box-shadow: 0 0 5px rgba(255, 126, 95, 0.5);
+        }
+        .otp-container button {
+            background: #ff7e5f;
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .otp-container button:hover {
+            background: #feb47b;
+            transform: translateY(-2px);
+        }
+        .otp-container p {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        .otp-container .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .otp-container .message.error {
+            background: #ffdddd;
+            color: #d8000c;
+            border: 1px solid #d8000c;
+        }
+        .otp-container .message.success {
+            background: #ddffdd;
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <h1>Verify OTP</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="otp">Enter OTP:</label>
+            <input type="text" name="otp" id="otp" placeholder="Enter your OTP" required>
+            
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -50,19 +50,35 @@ def employee_profile(request):
     return render(request, 'hrms/admin/employee-management/employee_profile.html', context)
 
 
-@login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+import pyotp
+import qrcode
+from io import BytesIO
+import base64
+
 def add_employee(request):
-    if request.user.role != 'admin':
-        return redirect('dashboard')
+    if request.method == 'POST':
+        form = EmployeeCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.otp_secret = pyotp.random_base32()  # Add OTP secret
+            user.set_password(form.cleaned_data['password'])  # Set password securely
+            user.save()
 
-    form = EmployeeCreationForm(request.POST or None)
+            # Generate QR code
+            totp = pyotp.TOTP(user.otp_secret)
+            qr_code_data = totp.provisioning_uri(user.username, issuer_name="HRM App")
+            qr = qrcode.make(qr_code_data)
 
-    if request.method == 'POST' and form.is_valid():        
-        user = form.save(commit=False)
-        user.password = make_password(form.cleaned_data['password'])
-        user.save()
+            buffer = BytesIO()
+            qr.save(buffer, format="PNG")
+            buffer.seek(0)
+            qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        return redirect('employeeprofile')
+            return render(request, 'hrms/admin/show_qr.html', {'qr_code': qr_code_base64})
+    else:
+        form = EmployeeCreationForm()  # Initialize an empty form for GET requests
 
     return render(request, 'hrms/admin/employee-management/add_emloyee.html', {'form': form})
 
